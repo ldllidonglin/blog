@@ -6,15 +6,15 @@ cache:
     - node_modules
 before_install:
   - npm install
-  - npm install -g gulp
+  - npm install -g hexo-cli
 script:
-  - gulp generate
+  - hexo generate
 after_script:
-  - Capybara.default_wait_time
-  - gulp copy
+  - Capybara.default_wait_time = 15
 deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
+  local_dir: publish
   on:
     branch: master
