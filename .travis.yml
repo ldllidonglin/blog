@@ -1,9 +1,6 @@
 language: node_js
 node_js:
   - '4.5.0'
-branches:
-  only:
-    - gh-pages
 cache:
   directories:
     - node_modules
@@ -20,4 +17,4 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   on:
-    branch: gh-pages
+    branch: master
