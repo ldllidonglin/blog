@@ -1,0 +1,677 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/blog/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/blog/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="个人积累记录" />
+
+
+
+  <meta name="keywords" content="JavaScript," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/blog/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="第一部分 作用域和闭包作用域 源代码在执行前一般会有三个步骤：词法分析(分词0)、解析（构造AST）、代码生成（AST转成可执行代码） 作用域是一套规则，用于确定在何处以及如何查找变量，赋值就用LHS查询，取值就是RHS查询。不成功的RHS会抛ReferenceError">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你所不知道的JavaScript上卷">
+<meta property="og:url" content="http://localhost:4000/blog/2016/12/05/2016-12-05-你所不知道的JavaScript上卷/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="第一部分 作用域和闭包作用域 源代码在执行前一般会有三个步骤：词法分析(分词0)、解析（构造AST）、代码生成（AST转成可执行代码） 作用域是一套规则，用于确定在何处以及如何查找变量，赋值就用LHS查询，取值就是RHS查询。不成功的RHS会抛ReferenceError">
+<meta property="og:updated_time" content="2017-05-09T15:28:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你所不知道的JavaScript上卷">
+<meta name="twitter:description" content="第一部分 作用域和闭包作用域 源代码在执行前一般会有三个步骤：词法分析(分词0)、解析（构造AST）、代码生成（AST转成可执行代码） 作用域是一套规则，用于确定在何处以及如何查找变量，赋值就用LHS查询，取值就是RHS查询。不成功的RHS会抛ReferenceError">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 你所不知道的JavaScript上卷 | 李冬琳的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/blog/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">李冬琳的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              你所不知道的JavaScript上卷
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-12-05T00:00:00+08:00" content="2016-12-05">
+            2016-12-05
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/blog/categories/读书笔记/" itemprop="url" rel="index">
+                  <span itemprop="name">读书笔记</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="第一部分-作用域和闭包"><a href="#第一部分-作用域和闭包" class="headerlink" title="第一部分 作用域和闭包"></a>第一部分 作用域和闭包</h1><h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><ul>
+<li>源代码在执行前一般会有三个步骤：词法分析(分词0)、解析（构造AST）、代码生成（AST转成可执行代码）</li>
+<li>作用域是一套规则，用于确定在何处以及如何查找变量，赋值就用LHS查询，取值就是RHS查询。不成功的RHS会抛ReferenceError<a id="more"></a>
+<h2 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h2></li>
+<li>词法作用域就是定义在词法阶段的作用域，是由写代码时将变量和块作用域写在哪里决定的。</li>
+<li>eval和with会在运行时修改词法作用域，导致无法再词法分析阶段明确知道当前作用域会发生怎样的修改，所以引擎也就没法优化，导致性能下降。</li>
+</ul>
+<h2 id="函数作用域和块作用域"><a href="#函数作用域和块作用域" class="headerlink" title="函数作用域和块作用域"></a>函数作用域和块作用域</h2><ul>
+<li>函数是JavaScript中最常见的作用域单元；try/catch结构在catch分句中具有块作用域;ES6中引入了let关键字，可以在任意代码块中声明变量</li>
+</ul>
+<h2 id="提升"><a href="#提升" class="headerlink" title="提升"></a>提升</h2><ul>
+<li>var a=2;这包括声明和赋值两部分;</li>
+<li>只有声明本身会被提升，而赋值或其他运行逻辑会留在原地</li>
+<li><p>普通块内部的函数声明通常会被提升到所在作用域的顶部</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">foo(); <span class="comment">//'b'</span></div><div class="line"><span class="keyword">var</span> a = <span class="literal">true</span>;</div><div class="line"><span class="keyword">if</span>(a)&#123;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">'a'</span>);&#125;</div><div class="line">&#125;<span class="keyword">else</span>&#123;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">'b'</span>);&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>函数表达式是赋值操作，不会提升。</p>
+</li>
+</ul>
+<h2 id="作用域闭包"><a href="#作用域闭包" class="headerlink" title="作用域闭包"></a>作用域闭包</h2><ul>
+<li>无论通过何种手段将内部函数传递到所在的词法作用域以外，他都会持有对原始作用域的引用，无论在何处执行这个函数都会使用闭包。</li>
+</ul>
+<h1 id="第二部分-this和对象"><a href="#第二部分-this和对象" class="headerlink" title="第二部分 this和对象"></a>第二部分 this和对象</h1><h2 id="关于this"><a href="#关于this" class="headerlink" title="关于this"></a>关于this</h2><ul>
+<li>this不指向函数本身也不指向函数的词法作用域，this是在函数被调用的时候绑定的，其指向取决于函数在哪调用。</li>
+</ul>
+<h2 id="this全面解析"><a href="#this全面解析" class="headerlink" title="this全面解析"></a>this全面解析</h2><ul>
+<li>Array.forEach(callback, thisArg)也是一种显示绑定，它也使用了call或者apply</li>
+<li><p>new绑定、显示绑定、隐式绑定、默认绑定优先级由高到低</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//下面代码说明new比显示绑定要高</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">s</span>)</span>&#123;</div><div class="line">   <span class="keyword">this</span>.a=s;</div><div class="line"> &#125;</div><div class="line"> <span class="keyword">var</span> obj=&#123;&#125;;</div><div class="line"> <span class="keyword">var</span> bar=foo.bind(obj);</div><div class="line"> bar(<span class="number">2</span>);</div><div class="line"> <span class="built_in">console</span>.log(obj.a);</div><div class="line"> <span class="keyword">var</span> baz=<span class="keyword">new</span> bar(<span class="number">3</span>);</div><div class="line"> <span class="built_in">console</span>.log(obj.a);</div><div class="line"> <span class="built_in">console</span>.log(baz.a);</div></pre></td></tr></table></figure>
+</li>
+<li><p>当把null、undefined作为this的绑定对象传入call或者apply中时，这些值在调用时会被忽略，实际应用的是默认绑定。</p>
+</li>
+<li><p>赋值时容易发生间接引用</p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span><span class="comment">&#123;</span></span></div><div class="line">   console.log(this.a);</div><div class="line">&#125;</div><div class="line"><span class="title">var</span> <span class="title">a</span> = 2;</div><div class="line"><span class="keyword">var</span> o = <span class="comment">&#123; a:3, foo:foo &#125;</span>;</div><div class="line"><span class="keyword">var</span> p = <span class="comment">&#123; a:4 &#125;</span>;</div><div class="line">o.foo(); <span class="comment">// 3</span></div><div class="line">(p.foo() = o.foo())(); <span class="comment">//2</span></div></pre></td></tr></table></figure>
+<ul>
+<li>对于默认绑定，决定this绑定对象的并不是调用位置是否处于严格模式，而是函数体是否处于严格模式，是的话会被绑定到undefined。</li>
+<li><p>硬绑定后，无论函数在哪调用都会带上绑定的this，除了new也无法改变了</p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">aa</span><span class="params">()</span><span class="comment">&#123;</span></span></div><div class="line">  console.log(this.a)</div><div class="line">&#125;</div><div class="line"><span class="title">b</span>=<span class="comment">&#123;a:2&#125;</span>;</div><div class="line">c=<span class="comment">&#123;a:4&#125;</span></div><div class="line">aa.call(b) <span class="comment">//2</span></div><div class="line">aa() <span class="comment">//2</span></div><div class="line">aa.call(c) <span class="comment">//4</span></div><div class="line">aa(); <span class="comment">//2</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>箭头函数的绑定无法被修改，new也不行。它是根据当前词法环境来决定this，会继承外层函数调用的this绑定。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><ul>
+<li>字面量表示的字符串或者数据还有布尔值，并不是对象，当使用比如str.length时，是js引擎自动把字面量转换成String对象</li>
+<li>Object、Array、Function、RegExp无论是字面量还是构造形式，都是对象。</li>
+<li>在对象中，属性名永远是字符串。</li>
+<li>判断一个对象是否可枚举，可以用for in 或者propertyIsEnumerable(‘a’)</li>
+<li>Object.keys(..) 会返回一个数组,包含所有可枚举属性, Object.getOwnPropertyNames (..)<br>会返回一个数组, 包含所有属性, 无论它们是否可枚举</li>
+<li>访问属性时，引擎实际上会调用内部的默认[[Get]]操作,设置时是调用[[Put]].[[Get]]会检查对象本身是否包含这个属性，如果没有的话会查找原型链</li>
+<li><p>属性的特性可以通过属性描述符来控制， 比如 writable、 configurable、enumerable</p>
+  <figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="string">Object.defineProperty(myObject,</span> <span class="string">"a"</span><span class="string">,</span> <span class="string">&#123;</span></div><div class="line"><span class="attr">    value:</span> <span class="number">2</span><span class="string">,</span></div><div class="line"><span class="attr">    writable:</span> <span class="literal">true</span><span class="string">,</span></div><div class="line"><span class="attr">    configurable:</span> <span class="literal">true</span><span class="string">,</span></div><div class="line"><span class="attr">    enumerable:</span> <span class="literal">true</span></div><div class="line"><span class="string">&#125;);</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>属性不一定包含值——它们可能是具备 getter/setter 的“ 访问描述符”。 此外， 属性可以是<br>可枚举或者不可枚举的， 这决定了它们是否会出现在 for..in 循环中</p>
+  <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> myObject = &#123;</div><div class="line">    <span class="comment">// 给 a 定义一个 getter</span></div><div class="line">    <span class="keyword">get</span> a() &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">Object.defineProperty(</div><div class="line">    myObject, <span class="comment">// 目标对象</span></div><div class="line">    <span class="string">"b"</span>, <span class="comment">// 属性名118 ｜ 第 3 章</span></div><div class="line">    &#123; <span class="comment">// 描述符</span></div><div class="line">        <span class="comment">// 给 b 设置一个 getter</span></div><div class="line">        <span class="keyword">get</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.a * <span class="number">2</span> &#125;,</div><div class="line">        <span class="comment">// 确保 b 会出现在对象的属性列表中</span></div><div class="line">        enumerable: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">);</div></pre></td></tr></table></figure>
+</li>
+<li><p>可以使用 ES6 的 for..of 语法来遍历数据结构（ 数组、 对象， 等等） 中的值， for..of<br>会寻找内置或者自定义的 @@iterator 对象并调用它的 next() 方法来遍历数据值</p>
+</li>
+</ul>
+<h2 id="混合对象“类”"><a href="#混合对象“类”" class="headerlink" title="混合对象“类”"></a>混合对象“类”</h2><p>面向对象编程中，JavaScript中的类，以及继承，多态</p>
+<h2 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h2><ul>
+<li>给对象赋值，如果key在prototype中存在并且被设置为writable:false，那赋值将失败，没法重写该属性</li>
+<li>var a = new Foo() 就是把a的[[Prototype]]关联到Foo.prototype指向的那个对象，所以a可以访问Foo.prototype上的属性</li>
+<li>JavaScript 机制和传统面向类语言中的“ 类初始化” 和“ 类继承” 很相似， 但是JavaScript 中的机制有一个核心区别， 那就是不会进行复制， 对象之间是通过内部的[[Prototype]] 链关联的</li>
+<li>Bar.prototype = Object.create(Foo.prototype)是一种没有副作用的原型链继承方式</li>
+</ul>
+<h1 id="行为委托"><a href="#行为委托" class="headerlink" title="行为委托"></a>行为委托</h1><ul>
+<li>类是一种可选的设计模式，而且在JavaScript这样的语言中实现类其实很别扭，还不如直接使用它的原型链</li>
+<li>继承直接用Child.prototype = Object.create(Parent.prototype)</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/JavaScript/" rel="tag">#JavaScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/01/20/2017-01-20-前端线上统计及监控/" rel="prev">前端线上统计及监控</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2016/09/27/2016-09-27-《乌合之众》读后感/" rel="next">《乌合之众》读后感</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/blog/images/default_avatar.jpg" alt="李冬琳" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">李冬琳</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">个人积累记录</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/blog/archives/">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一部分-作用域和闭包"><span class="nav-number">1.</span> <span class="nav-text">第一部分 作用域和闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域"><span class="nav-number">1.1.</span> <span class="nav-text">作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#词法作用域"><span class="nav-number">1.2.</span> <span class="nav-text">词法作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数作用域和块作用域"><span class="nav-number">1.3.</span> <span class="nav-text">函数作用域和块作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提升"><span class="nav-number">1.4.</span> <span class="nav-text">提升</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域闭包"><span class="nav-number">1.5.</span> <span class="nav-text">作用域闭包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二部分-this和对象"><span class="nav-number">2.</span> <span class="nav-text">第二部分 this和对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于this"><span class="nav-number">2.1.</span> <span class="nav-text">关于this</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#this全面解析"><span class="nav-number">2.2.</span> <span class="nav-text">this全面解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象"><span class="nav-number">2.3.</span> <span class="nav-text">对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#混合对象“类”"><span class="nav-number">2.4.</span> <span class="nav-text">混合对象“类”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型"><span class="nav-number">2.5.</span> <span class="nav-text">原型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#行为委托"><span class="nav-number">3.</span> <span class="nav-text">行为委托</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/blog/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/blog/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/blog/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/blog/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/blog/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/blog/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/blog/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/blog/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/blog/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/blog/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/blog/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

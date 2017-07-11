@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - '4.5.0'
+branches:
+  only:
+    - gh-pages
+cache:
+  directories:
+    - node_modules
+before_install:
+  - npm install
+  - npm install -g gulp
+script:
+  - gulp generate
+after_script:
+  - Capybara.default_wait_time
+  - gulp copy
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: gh-pages
