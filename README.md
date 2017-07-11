@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ldllidonglin/blog.svg?branch=master)](https://travis-ci.org/ldllidonglin/blog)
 # blog
 1. powered by hexo
 2. jquery study nodes 
