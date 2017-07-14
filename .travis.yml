@@ -12,5 +12,7 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   local_dir: public
+  email: ldllidonglin@sina.com
+  name: ldllidonglin
   on:
     branch: master
