@@ -4,6 +4,8 @@
 2. personal study nodes and summary
 3. use next theme
 # local build
+first
 ```
 hexo s
 ```
+then open htp://localhost:4000/
