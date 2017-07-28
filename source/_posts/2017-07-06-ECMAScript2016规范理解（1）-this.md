@@ -1,5 +1,5 @@
 ---
-title: 2017-07-06-ECMAScript2016规范理解（1）-this
+title: ECMAScript2016规范理解（1）-this
 tags: [JavaScript, ECMAScript规范, this]
 date: 2017.07.06
 categories: ECMAScript规范
