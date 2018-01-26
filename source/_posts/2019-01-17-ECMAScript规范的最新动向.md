@@ -3,10 +3,10 @@ date: 2018.01.17
 tags: [ECMAScript规范, JavaScript]
 categories: ECMAScript规范
 ---
-这篇文章主要是关注ECMAScript最新有什么变动，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal。所以这篇文章
-会持续更新。本次更新时间2017.01.17
+这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。
 <!--more-->
 ## 2018.01.27更新
+
 ### 新增了6个proposal到stage4：
 * RegExp named capture groups
 * Rest/Spread Properties
@@ -14,13 +14,15 @@ categories: ECMAScript规范
 * Unicode property escapes in regular expressions
 * Promise.prototype.finally
 * async-iteration
-### 新增了3个到stage3
+
+### 新增了3个proposal到stage3
 * [JSON superset](https://github.com/tc39/proposal-json-superset)
   + 让ECMA-262 syntax的语法是JSON的语法的超集。就是让ECMA-262字符串语法兼容JSON的字符串语法
 * [String.prototype.{trimStart,trimEnd}](https://github.com/tc39/proposal-string-left-right-trim)
   + 之前规范已经有了padStart/padEnd，这次就加上去除空格的方法
 * [String.prototype.matchAll](https://github.com/tc39/String.prototype.matchAll)
   + 把字符串中匹配正则的捕获组全部返回，而不是靠循环去取
+
 ## stage4
 截止到TC39最近的一次例行会议（2017.11.30），目前在stage4的一共有两个Proposal：
 ### Lifting template literal restriction
@@ -79,7 +81,7 @@ categories: ECMAScript规范
     // 可不写参数了
   }
   ```
-
+* chrome66已经实现
 
 ### 4 global
 * 增加一个名为global的，在浏览器、nodejs、Web Workers中通用的全局对象，用来访问全局变量
@@ -241,3 +243,9 @@ let amount = 1_234_500; // 1,234,500
 
 ## ASI和class fields
 由于增加了class field语法，这就导致和原本的ASI会有一些冲突迷惑的地方，会让ASI很难处理。具体的问题可以看这个[slide](https://docs.google.com/presentation/d/1bPzE6i_Bpm6FXgzfx9XFJNHGkVcM42lux-6bUNhxpl4/edit#slide=id.g29382c0eba_0_157)。经过讨论，TC39决定在class内还是要ASI，并且在规范内增加个声明，描述ASI可能遇到风险，但是有一句话是，explicit semicolon use is recommended。激起了社区广泛的讨论，质疑TC39是不是从官方的角度建议加上分好，不推荐semicolon-less风格。具体讨论见[PR](https://github.com/tc39/ecma262/pull/1062)
+
+
+## 参考资料
+* [各个提案浏览器的实现情况](http://kangax.github.io/compat-table/esnext/)
+* [所有proposal](https://github.com/tc39/proposals/blob/master/README.md)
+* [tc39的会议纪要](https://github.com/rwaldron/tc39-notes)
