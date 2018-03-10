@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-  - '4.5.0'
+  - '6.9.0'
 cache: node_modules
 script:
-  - node_modules/hexo-cli/bin/hexo generate
+  - ./node_modules/hexo/bin/hexo generate
 deploy:
   provider: pages
   skip_cleanup: true
