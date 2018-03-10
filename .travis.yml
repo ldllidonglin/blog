@@ -2,10 +2,8 @@ language: node_js
 node_js:
   - '4.5.0'
 cache: node_modules
-before_install:
-  - npm install -g hexo-cli
 script:
-  - hexo generate
+  - node_modules/hexo-cli/bin/hexo generate
 deploy:
   provider: pages
   skip_cleanup: true
