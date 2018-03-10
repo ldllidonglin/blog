@@ -6,6 +6,7 @@
     <i class="icon-next-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">{{ config.author }}</span>
+  <img style="width:20px;vertical-align:middle;display:inline-block;" src="http://58.87.100.81:3000/avatar.png" />
 </div>
 
 <div class="powered-by">
