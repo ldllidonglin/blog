@@ -6,7 +6,7 @@
     <i class="icon-next-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">{{ config.author }}</span>
-  <img style="width:20px;vertical-align:middle;display:inline-block;" src="http://xiaoxuehua.xyz/avatar.png" />
+  <img style="width:20px;vertical-align:middle;display:inline-block;" src="//xiaoxuehua.xyz/statics/images/avatar.png" />
 </div>
 
 <div class="powered-by">
