@@ -5,6 +5,30 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。
 <!--more-->
+## 2018.05.30更新
+### ECMAScript2018定稿
+从进展来看，ECMAScript2018在1月份的会议上已经定稿了，所以最终ECMAScript2018新增了8个特性分别是：
+* Lifting template literal restriction
+* s (dotAll) flag for regular expressions
+* RegExp named capture groups
+* Rest/Spread Properties
+* RegExp Lookbehind Assertions
+* Unicode property escapes in regular expressions
+* Promise.prototype.finally
+* async-iteration
+
+### ECMAScript2019
+#### 有两个进入stage4，也就是ECMAScript2019
+* Optional catch binding
+* JSON superset
+
+#### 新增 1 个到stage3
+* [Symbol.prototype.description	](https://github.com/tc39/proposal-Symbol-description)
+  + 通过 description 这个访问器属性，返回Symbol的描述，代替之前通过Symbol.prototype.toString来实现
+
+
+
+
 ## 2018.01.27更新
 
 ### 新增了6个proposal到stage4：
@@ -17,7 +41,7 @@ categories: ECMAScript规范
 
 ### 新增了3个proposal到stage3
 * [JSON superset](https://github.com/tc39/proposal-json-superset)
-  + 让ECMA-262 syntax的语法是JSON的语法的超集。就是让ECMA-262字符串语法兼容JSON的字符串语法
+  + 修正ECMA-262的JSON语法，从而满足是JSON的语法的超集。就是让ECMA-262字符串语法兼容JSON的字符串语法
 * [String.prototype.{trimStart,trimEnd}](https://github.com/tc39/proposal-string-left-right-trim)
   + 之前规范已经有了padStart/padEnd，这次就加上去除空格的方法
 * [String.prototype.matchAll](https://github.com/tc39/String.prototype.matchAll)
