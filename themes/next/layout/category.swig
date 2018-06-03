@@ -2,22 +2,32 @@
 {% import '_macro/post-collapse.swig' as post_template %}
 {% import '_macro/sidebar.swig' as sidebar_template %}
 
-{% block title %} {{ __('title.category') }}: {{ page.category }} | {{ config.title }} {% endblock %}
+{% block title %}{{ __('title.category') }}: {{ page.category }} | {{ config.title }}{% endblock %}
 
 {% block content %}
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        {{ page.category }}
-        <small>{{  __('title.category')  }}</small>
-      </h2>
+  {######################}
+  {### CATEGORY BLOCK ###}
+  {######################}
+  <div class="post-block category">
+
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <{% if theme.seo %}h2{% else %}h1{% endif %}>{#
+        #}{{ page.category }}{#
+        #}<small>{{  __('title.category')  }}</small>
+        </{% if theme.seo %}h2{% else %}h1{% endif %}>
+      </div>
+
+      {% for post in page.posts %}
+        {{ post_template.render(post) }}
+      {% endfor %}
     </div>
 
-    {% for post in page.posts %}
-      {{ post_template.render(post) }}
-    {% endfor %}
-  </section>
+  </div>
+  {##########################}
+  {### END CATEGORY BLOCK ###}
+  {##########################}
 
   {% include '_partials/pagination.swig' %}
 
@@ -25,13 +35,4 @@
 
 {% block sidebar %}
   {{ sidebar_template.render(false) }}
-{% endblock %}
-
-
-{% block script_extra_before %}
-  {% if theme.use_motion %}
-    <script type="text/javascript">
-      postMotionOptions = {stagger: 100, drag: true};
-    </script>
-  {% endif %}
 {% endblock %}
