@@ -5,6 +5,16 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。
 <!--more-->
+## 2018.08.24 更新
+### 新增一个提案到stage3
+* Object.fromEntries
+  ```
+  var a = {b:1, c:2}
+  Object.entries(a)                 // [['b', 1], ['c', 2]]
+  var e = [['a', 1], ['c', 2]]
+  var obj = Object.fromEntries(e)   // {b:1, c:2}
+  ```
+
 ## 2018.05.30更新
 ### ECMAScript2018定稿
 从进展来看，ECMAScript2018在1月份的会议上已经定稿了，所以最终ECMAScript2018新增了8个特性分别是：
