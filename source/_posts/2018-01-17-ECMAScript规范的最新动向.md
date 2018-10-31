@@ -5,6 +5,21 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。
 <!--more-->
+## 2018.10.31 更新
+### 新增一个提案到stage3
+* Well-formed JSON.stringify
+```
+// Without the proposal:
+JSON.stringify('\uD800');
+// → '"<U+D800>"'
+
+
+// With the proposal:
+JSON.stringify('\uD800');
+// → '"\\ud800"
+
+```
+* [slide](https://docs.google.com/presentation/d/1oTkthPjlRg8FOsyvD9XdA-rPkfLcMrTDCIiHNltIxpw/edit#slide=id.g3b22f3749a_0_51)
 ## 2018.08.24 更新
 ### 新增一个提案到stage3
 * Object.fromEntries
