@@ -43,7 +43,7 @@ function (_Component) {
   return App;
 }(react__WEBPACK_IMPORTED_MODULE_5__["Component"]);
 ```
-我发现竟然有很多直接调用Object(v)方法，而不是new Object(v), 或者世界使用v。然后我就在想为何要这么用，这俩有啥区别,网上搜了一遍也没搜到答案，还是看规范吧，规则在[19章](https://tc39.github.io/ecma262/#sec-object-objects)
+我发现竟然有很多直接调用Object(v)方法，而不是new Object(v), 或者直接使用v。然后我就在想为何要这么用，这俩有啥区别,网上搜了一遍也没搜到答案，还是看规范吧，规范在[19章](https://tc39.github.io/ecma262/#sec-object-objects)
 ![object](object.png)
 意思就是：
 * 如果NewTarget既不是undefined，也不是当前执行环境的active function时，就会执行OrdinaryCreateFromConstructor，就是从构造函数创建对象
