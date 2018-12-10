@@ -5,6 +5,29 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。
 <!--more-->
+## 2018.12.10 更新
+### 新增两个提案到stage4，即ECMAScript2019中
+这俩提案在进入stage3的时候已经在下文中介绍过了
+* Symbol.prototype.description
+* Function.prototype.toString revision
+
+### 新增一个提案到stage3
+* [Hashbang Grammar](https://github.com/tc39/proposal-hashbang)
+就是把已经成为事实标准的在cli工具中会使用到的#!符号写入标准
+* 
+```
+#!/usr/bin/env node
+// in the Script Goal
+'use strict';
+console.log(1);
+```
+* 
+```
+#!/usr/bin/env node
+// in the Module Goal
+export {};
+console.log(1);
+```
 ## 2018.10.31 更新
 ### 新增一个提案到stage3
 * Well-formed JSON.stringify
