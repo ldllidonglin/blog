@@ -5,6 +5,15 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。
 <!--more-->
+## 2019.02.19 更新
+### 新增4个提案到stage4，即ECMAScript2019中
+有三个是新增的内置对象的方法，规范没制定之前已经被大量使用，还有一个是对旧方法的描述进行订正升级。分别是：
+* Object.fromEntries
+* Well-formed JSON.stringify
+* String.prototype.{trimStart,trimEnd}
+* Array.prototype.{flat,flatMap}
+
+以上都在具体提案升级到stage3时已做介绍，这次1月份的会议没有新提案进入stage3
 ## 2018.12.10 更新
 ### 新增两个提案到stage4，即ECMAScript2019中
 这俩提案在进入stage3的时候已经在下文中介绍过了
@@ -310,8 +319,9 @@ let amount = 1_234_500; // 1,234,500
 * Number和BigInt不能互转
 * 重载了+ / 等运算符
 
-### 17 Array.prototype.{flatMap,flatten}
+### 17 Array.prototype.{flatMap,flat}
 * Array增加了两个原型方法，拍平数组（flatten），以及可以传入处理函数处理后再拍平（flatMap）
+* flatten 由于很多第第三方库已经实现了这个方法，所以为了避免冲突，这个方法在规范中已经改名为flat，并且chrome69已经实现了
 
 ## ASI和class fields
 由于增加了class field语法，这就导致和原本的ASI会有一些冲突迷惑的地方，会让ASI很难处理。具体的问题可以看这个[slide](https://docs.google.com/presentation/d/1bPzE6i_Bpm6FXgzfx9XFJNHGkVcM42lux-6bUNhxpl4/edit#slide=id.g29382c0eba_0_157)。经过讨论，TC39决定在class内还是要ASI，并且在规范内增加个声明，描述ASI可能遇到风险，但是有一句话是，explicit semicolon use is recommended。激起了社区广泛的讨论，质疑TC39是不是从官方的角度建议加上分好，不推荐semicolon-less风格。具体讨论见[PR](https://github.com/tc39/ecma262/pull/1062)
