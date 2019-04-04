@@ -5,6 +5,47 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。
 <!--more-->
+## 2019.04.04 更新
+### 新增一个提案到stage4，也就是ECMAScript2020中
+* String.prototype.matchAll，这个提案在2018年1月就进入stage3中了
+
+### 新增两个提案到stage3
+* Promise.allSettled
+因为Promise.all会在有一个reject的时候，就直接reject，并且其他resolve的结果都会丢弃，对于想知道所有结果（无论resolve还是reject）的情况下，就必须重新包装一下，如下代码：
+  ```
+  function reflect(promise) {
+    return promise.then(
+      (v) => {
+        return { status: 'fulfilled', value: v };
+      },
+      (error) => {
+        return { status: 'rejected', reason: error };
+      }
+    );
+  }
+
+  const promises = [ fetch('index.html'), fetch('https://does-not-exist/') ];
+  const results = await Promise.all(promises.map(reflect));
+  const successfulPromises = results.filter(p => p.status === 'fulfilled');
+  ```
+  而有了allSettled方法后，就不需要这样了，如下：
+  ```
+  const promises = [ fetch('index.html'), fetch('https://does-not-exist/') ];
+  const results = await Promise.allSettled(promises);
+  const successfulPromises = results.filter(p => p.status === 'fulfilled');
+  ```
+* Numeric separators
+用下划线(_)做数字分隔符,让数字的可读性更强
+```
+1_000_000_000           // Ah, so a billion
+101_475_938.38          // And this is hundreds of millions
+
+let fee = 123_00;       // $123 (12300 cents, apparently)
+let fee = 12_300;       // $12,300 (woah, that fee!)
+let amount = 12345_00;  // 12,345 (1234500 cents, apparently)
+let amount = 123_4500;  // 123.45 (4-fixed financial)
+let amount = 1_234_500; // 1,234,500
+```
 ## 2019.02.19 更新
 ### 新增4个提案到stage4，即ECMAScript2019中
 有三个是新增的内置对象的方法，规范没制定之前已经被大量使用，还有一个是对旧方法的描述进行订正升级。分别是：
