@@ -38,7 +38,7 @@ Repeat:
 ```
 上面的意思就是，从当前执行上下文的词法环境开始，不断往上寻找含有this值的词法环境，直到找到为止，这个和原型链上属性的查找模式一样。一定会找到含有this的词法环境，因为规范规定，最外层的词法环境就是全局词法环境，而全局词法环境是一定有this值的。
 
-找到了含有this的词法环境后，就是执行envRec.GetThisBinding()。规范规定一共有5中词法环境，其中声明式词法环境、对象式词法环境是没有this的，模块式词法环境的this值是undefined，全局词法环境的this值就是[[GlobalThisValue]]这个内部值，这个内部值有宿主环境提供，众所周知，在浏览器环境下this绑定的就是window对象。所以只剩下函数式词法环境的值了
+找到了含有this的词法环境后，就是执行envRec.GetThisBinding()。规范规定一共有5种词法环境，其中声明式词法环境、对象式词法环境是没有this的，模块式词法环境的this值是undefined，全局词法环境的this值就是[[GlobalThisValue]]这个内部值，这个内部值有宿主环境提供，众所周知，在浏览器环境下this绑定的就是window对象。所以只剩下函数式词法环境的值了
 
 8.1.1.3.4 定义了这个函数的执行过程
 ```
@@ -195,12 +195,12 @@ c();
 所谓的构造函数调用，其实就是 new 表达式的执行过程，[12.3.3](http://www.ecma-international.org/ecma-262/7.0/index.html#sec-new-operator)定义了new表达式的执行过程。
 + 先获取函数的[[ConstructorKind]]属性，如果是base则用(fn.prototype||Object.prototype)为原型去创建对象o。
 + 如果[[ConstructorKind]]是base，则把o对象绑定为当前执行上下文的this。
-+ 执行函数，获取返回值result
++ 执行函数体，获取返回值result
 + 如果result的类型是return
-* 如果其值的类型是Object，则返回result（任何函数，只要返回Object，就直接返回）
-* 如果[[ConstructorKind]]是base，则返回对象o，（普通函数，如果返回值不是Object，则返回创建的o）
-* 如果返回值不是undefined，抛出TypeError异常（是返回非object和undefined的值）
-* 返回执行上下文中的this值（函数体中没有return语句）
+  * 如果其值的类型是Object，则返回result（任何函数，只要返回Object，就直接返回）
+  * 如果[[ConstructorKind]]是base，则返回对象o，（如果是普通函数，如果返回值不是Object，则返回创建的o）
+  * 如果返回值不是undefined，抛出TypeError异常（是返回非object和undefined的值）
++ 返回执行上下文中的this值（函数体中没有return语句）
 
 *9.2 中规定[[ConstructorKind]]只有两种值，base和derived，derived就是指声明了继承的使用class语法得到的函数，剩下的就是base*
 
