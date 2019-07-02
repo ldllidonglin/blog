@@ -1,10 +1,58 @@
 title: ECMAScript规范的最新动向
-date: 2018.01.17
+date: 2019.07.03
 tags: [ECMAScript规范, JavaScript]
 categories: ECMAScript规范
 ---
-这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。
+这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。第一次写是在2018.01.17
 <!--more-->
+## 2019.07.03 更新
+### 新增一个提案到stage4，将会出现在ECMAScript2020中
+* import() 
+  + 终于写进规范了,之前在stage3的时候有详细介绍，其实这个我们已经借助webpack使用上这个功能了，chrome从63开始就已经支持了
+  + [提案信息介绍](https://github.com/tc39/proposal-dynamic-import)
+
+### 新增4个提案到stage3
+* [for-in mechanics](https://github.com/tc39/proposal-for-in-exploration)
+规范for-in的迭代顺序
+* [Array.isTemplateObject](https://github.com/tc39/proposal-array-is-template-object)
+提供一个方法来给标签函数判断入参是否是模板字符串提供的
+* Optional Chaining
+判断属性是否存在再也不用这么麻烦了
+```
+var street = user.address && user.address.street;
+// 变成
+var street = user.address?.street
+const animationDuration = response.settings?.animationDuration ?? 300;
+```
+* Nullish coalescing Operator
+这个和Optional Chaining是配合使用的，当使用了Optional Chaining后，有时只想判断当时null或者undefined时用默认值时，用下面这个代码就会有问题
+```
+const response = {
+  settings: {
+    nullValue: null,
+    height: 400,
+    animationDuration: 0,
+    headerText: '',
+    showSplashScreen: false
+  }
+};
+const headerText = response.settings?.headerText || 'Hello, world!'; //'Hello, world!'
+```
+所以可以用??来解决这个问题，只有为null或者undefined时，才会是false
+```
+const response = {
+  settings: {
+    nullValue: null,
+    height: 400,
+    animationDuration: 0,
+    headerText: '',
+    showSplashScreen: false
+  }
+};
+
+const undefinedValue = response.settings?.undefinedValue ?? 'some other default'; // result: 'some other default'
+```
+
 ## 2019.04.04 更新
 ### 新增一个提案到stage4，也就是ECMAScript2020中
 * String.prototype.matchAll，这个提案在2018年1月就进入stage3中了
