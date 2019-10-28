@@ -48,11 +48,9 @@ HTTP 缓存机制和规范
 * Pragma，HTTP/1.0，只有一种值：Pragma: no-cache；和Cache-Control: no-cache作用一样，用来兼容使用了Cache-Control的请求在HTTP/1.0的环境下能正常工作。优先级比Cache-Control低
 
 * Last-Modified/If-Modified-Since
-  + HTTP/1.0规定的协商缓存的方案，值是时间戳，和Expires有一样的问题，只能精确到秒。当respons中有Last-Modified时，下次request就会带上
-If-Modified-Since
+  + HTTP/1.0规定的协商缓存的方案，值是时间戳，和Expires有一样的问题，只能精确到秒。当respons中有Last-Modified时，下次request就会带上 If-Modified-Since
 * ETag/If-None-Match
-  + HTTP/1.1 用来解决Last-Modified/If-Modified-Since解决不了的问题，更准确，当有If-None-Match字段时，要忽略If-Modified-Since字段。当respons中有ETag时，下次request就会带上If-None-Match
-If-Modified-Since
+  + HTTP/1.1 用来解决Last-Modified/If-Modified-Since解决不了的问题，更准确，当有If-None-Match字段时，要忽略If-Modified-Since字段。当respons中有ETag时，下次request就会带上 If-None-Match
 
 * Vary，respons中的字段，告诉中间代理，通过缓存中的Vary标识的字段来判断，后续请求是否可以使用缓存，还是去服务器重新请求。最常见的情况是Vary: Accept-Encoding。意思就是如果request中的Accept-Encoding和缓存中的Accept-Encoding不一样的话，不能使用缓存，要重新请求。Vary: *和Cache-Control: private效果一样，就是中间代理不会缓存，每次都会去源服务器重新请求资源
 

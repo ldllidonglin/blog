@@ -5,18 +5,77 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。第一次写是在2018.01.17
 <!--more-->
+## 2019.10.28 更新
+### 新增了3个提案到stage4
+* BIGINT
+  + 2017年已经进入了stage3，下文已经详细介绍了这个特性
+* Promise.allSettled
+  + 前文已介绍，至此，js中已经有三个promise方法来来处理promise组合,另外两个是: Promise.all,Promise.race
+* globalThis
+  + 统一多环境下this的命名，在之前的提案中，叫global，最终改名叫globalThis。以后想使用this，又想让代码在多个环境兼容，就使用globalThis。
+
+### 新增5个提案到state3
+* [Top-level await](https://github.com/tc39/proposal-top-level-await)
+  + 在es模块系统中，可以直接不用async也能直接使用await了
+* [WeakReferences](https://github.com/tc39/proposal-weakrefs)
+  + WeakRef FinalizationGroup。优化垃圾收集，避免内存泄漏
+* [RegExp Match Indices](https://github.com/tc39/proposal-regexp-match-indices)
+  + exec方法返回值中增加一个indices属性，标识各个捕获组的start和end
+  + 示例
+  ```
+  const re1 = /a+(?<Z>z)?/;
+
+  // indices are relative to start of the input string:
+  const s1 = "xaaaz";
+  const m1 = re1.exec(s1);
+  m1.indices[0][0] === 1;
+  m1.indices[0][1] === 5;
+  s1.slice(...m1.indices[0]) === "aaaz";
+
+  m1.indices[1][0] === 4;
+  m1.indices[1][1] === 5;
+  s1.slice(...m1.indices[1]) === "z";
+
+  m1.indices.groups["Z"][0] === 4;
+  m1.indices.groups["Z"][1] === 5;
+  s1.slice(...m1.indices.groups["Z"]) === "z";
+
+  // capture groups that are not matched return `undefined`:
+  const m2 = re1.exec("xaaay");
+  m2.indices[1] === undefined;
+  m2.indices.groups["Z"] === undefined;
+  ```
+* [String.prototype.replaceAll](https://github.com/tc39/proposal-string-replaceall)
+  + 替换所有字符，解决replace方法使用如：queryString.replace(/\+/g, ' ');需要转义特定字符
+* [Promise.any](https://github.com/tc39/proposal-promise-any)
+  + Any of the promises was fulfilled
+  + 示例
+  ```
+  Promise.any([
+    fetch('https://v8.dev/').then(() => 'home'),
+    fetch('https://v8.dev/blog').then(() => 'blog'),
+    fetch('https://v8.dev/docs').then(() => 'docs')
+  ]).then((first) => {
+    // Any of the promises was fulfilled.
+    console.log(first);
+    // → 'home'
+  }).catch((error) => {
+    // All of the promises were rejected.
+    console.log(error);
+  });
+  ```
+
 ## 2019.07.03 更新
 ### 新增一个提案到stage4，将会出现在ECMAScript2020中
 * import() 
   + 终于写进规范了,之前在stage3的时候有详细介绍，其实这个我们已经借助webpack使用上这个功能了，chrome从63开始就已经支持了
   + [提案信息介绍](https://github.com/tc39/proposal-dynamic-import)
 
-### 新增4个提案到stage3
+### 新增3个提案到stage3
 * [for-in mechanics](https://github.com/tc39/proposal-for-in-exploration)
 规范for-in的迭代顺序
-* [Array.isTemplateObject](https://github.com/tc39/proposal-array-is-template-object)
-提供一个方法来给标签函数判断入参是否是模板字符串提供的
-* Optional Chaining
+
+* [Optional Chaining](https://github.com/tc39/proposal-optional-chaining)
 判断属性是否存在再也不用这么麻烦了
 ```
 var street = user.address && user.address.street;
@@ -24,7 +83,8 @@ var street = user.address && user.address.street;
 var street = user.address?.street
 const animationDuration = response.settings?.animationDuration ?? 300;
 ```
-* Nullish coalescing Operator
+
+* [Nullish coalescing Operator](https://github.com/tc39/proposal-nullish-coalescing)
 这个和Optional Chaining是配合使用的，当使用了Optional Chaining后，有时只想判断当时null或者undefined时用默认值时，用下面这个代码就会有问题
 ```
 const response = {
