@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="JavaScript,ECMAScript规范,词法作用域," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="平常面试，总是会遇到this、闭包、作用域相关的问题。要捋清楚这些问题，就必须理解执行上下文以及词法作用域。ECMAScript2016的第八章是专门讲执行上下文这个问题的，我的上一篇文章ECMAScript2016规范理解(1)-this中对于this的理解，需要对执行上下文和词法环境有一定的了解，所以在此补上">
+<meta name="keywords" content="JavaScript,ECMAScript规范,词法作用域">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript2016规范理解（2）-执行上下文和词法作用域">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="平常面试，总是会遇到this、闭包、作用域相关的问题。要捋清楚这些问题，就必须理解执行上下文以及词法作用域。ECMAScript2016的第八章是专门讲执行上下文这个问题的，我的上一篇文章ECMAScript2016规范理解(1)-this中对于this的理解，需要对执行上下文和词法环境有一定的了解，所以在此补上">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/GetThisEnvironment.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/ResolveThisBinding.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/context.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/NewFunctionEnvironment.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/FunctionInitialize.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/GetIdentifierReference.png">
+<meta property="og:updated_time" content="2018-03-19T16:17:27.096Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript2016规范理解（2）-执行上下文和词法作用域">
+<meta name="twitter:description" content="平常面试，总是会遇到this、闭包、作用域相关的问题。要捋清楚这些问题，就必须理解执行上下文以及词法作用域。ECMAScript2016的第八章是专门讲执行上下文这个问题的，我的上一篇文章ECMAScript2016规范理解(1)-this中对于this的理解，需要对执行上下文和词法环境有一定的了解，所以在此补上">
+<meta name="twitter:image" content="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/GetThisEnvironment.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/"/>
+
+
+
+
+
+  <title>ECMAScript2016规范理解（2）-执行上下文和词法作用域 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ECMAScript2016规范理解（2）-执行上下文和词法作用域</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-16T00:00:00+08:00">
+                2017-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/ECMAScript规范/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript规范</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>平常面试，总是会遇到this、闭包、作用域相关的问题。要捋清楚这些问题，就必须理解执行上下文以及词法作用域。ECMAScript2016的第八章是专门讲执行上下文这个问题的，我的上一篇文章<a href="http://ldllidonglin.github.io/blog/2017/07/06/2017-07-06-ECMAScript2016%E8%A7%84%E8%8C%83%E7%90%86%E8%A7%A3（1）-this/">ECMAScript2016规范理解(1)-this</a>中对于this的理解，需要对执行上下文和词法环境有一定的了解，所以在此补上</p>
+<a id="more"></a>
+<h2 id="执行上下文"><a href="#执行上下文" class="headerlink" title="执行上下文"></a>执行上下文</h2><p>规范中对于执行上下文的描述是在8.3中，规范的说明是执行上下文是ECMAScript实现的一种用来追踪代码运行的机制。执行上下文会在当JavaScript引擎从当前执行上下文所关联的代码进入另一段和当前上下文不关联的可执行代码的时候，就会创建一个可执行上下文（Execution Context）。任何时刻都只能有一个执行上下文，把其称为运行时执行上下文（running execution context.）。</p>
+<p>引擎会有一个叫执行上下文栈的东西来管理执行上下文的切换，栈顶的执行上下文永远是运行时执行上下文。当从执行上下文A进入另一个执行上下文B时，会把B推入栈中，称为栈顶元素，也就是运行时执行上下文，当B执行完，会从栈中推出，从而使引擎回到A的执行上下文。如下代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;                <span class="comment">// A</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> <span class="params">()</span> </span>&#123;       </span><br><span class="line">    console.log(b);       <span class="comment">// B</span></span><br><span class="line">&#125;</span><br><span class="line">b();</span><br><span class="line"><span class="keyword">var</span> c = <span class="number">1</span>                 <span class="comment">// A</span></span><br></pre></td></tr></table></figure></p>
+<p>当前执行上下文会从A -&gt; B -&gt; A</p>
+<h2 id="执行上下文的组成"><a href="#执行上下文的组成" class="headerlink" title="执行上下文的组成"></a>执行上下文的组成</h2><p>规范中规定执行上下文是包含任何可追踪代码状态的组件。其中<strong>词法环境（LexicalEnvironment）</strong>和<strong>变量环境（VariableEnvironment）</strong>是其非常重要的两个部分。在初始化执行上下文的时候，词法环境和变量环境的值是一样的，都是<strong>词法环境（Lexical Environments）</strong>他们的唯一区别就是变量环境是不会变化的，而词法环境有可能会在代码执行的时候被改变。一个执行上下文会有很多抽象操作，我就介绍两个在<a href="http://ldllidonglin.github.io/blog/2017/07/06/2017-07-06-ECMAScript2016%E8%A7%84%E8%8C%83%E7%90%86%E8%A7%A3（1）-this">ECMAScript2016规范理解(1)-this</a>中提到的方法</p>
+<p><img src="GetThisEnvironment.png" alt="GetThisEnvironment"><br>GetThisEnvironment这个方法翻译下来就是会从当前执行上下文开始，通过outer不断递归找有this绑定的词法环境，这个操作一定会找到，因为所有词法环境的最外层词法环境都是全局词法环境，它是有this绑定的。</p>
+<p><img src="ResolveThisBinding.png" alt="ResolveThisBinding"><br>ResolveThisBinding 这个方法就是在执行this表达式的时候会使用，返回当前词法环境中this绑定的值。</p>
+<h2 id="词法环境"><a href="#词法环境" class="headerlink" title="词法环境"></a>词法环境</h2><p>规范规定，词法环境是一个用于定义标识符和特定变量和函数在 ECMAScript 代码的词法嵌套结构上关联关系的规范类型。一个词法环境包括一个环境记录项和可能为null的外部词法环境的引用。</p>
+<h3 id="环境记录项"><a href="#环境记录项" class="headerlink" title="环境记录项"></a>环境记录项</h3><p>环境记录项一共有5种: 声明式、对象式、函数式、模块式、全局。他们各有不同，如下图<br><img src="context.png" alt="context"><br>HasThisBinding()函数返回为true的说明该环境记录是有this绑定的，那它就会实现一个GetThisBinding方法，从而返回其this值。</p>
+<h3 id="外部词法环境的引用"><a href="#外部词法环境的引用" class="headerlink" title="外部词法环境的引用"></a>外部词法环境的引用</h3><p>这个定义其实就解释了作用域链，因为每个词法环境在初始化的时候，就会给其outer初始化一个值，从而在变量查找的时候，当前环境记录项中没有时，就可以从outer得到当前词法环境的父环境，从而如事件冒泡一样，不断往上查找，直到全局词法环境，因为全局词法环境的外部引用是null。</p>
+<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p>作用域就是一套变量的查找规则，或者说是可访问变量的集合。也就是说作用域定义了一个变量可访问的范围，超出这个范围，那变量将不可被访问。JavaScript的作用域是静态作用域，也就是说变量可被访问的范围在变量被定义的时候就确定了。</p>
+<h3 id="词法环境初始化"><a href="#词法环境初始化" class="headerlink" title="词法环境初始化"></a>词法环境初始化</h3><p>当建立执行上下文时，作为执行上下文的一部分，词法环境当然也会被创建并且初始化。就拿函数词法环境的创建为例说明：</p>
+<p><img src="NewFunctionEnvironment.png" alt="NewFunctionEnvironment"><br>倒数第二步很关键，把F.[[Environment]]设为改词法环境env的外部引用（outer lexical environment reference of env）。那F.[[Environment]]是什么值？肯定也是词法环境，就看是在哪初始化的了。是函数的内部属性，那很有可能就是在函数初始化的时候。在规范中查找可得到如下图所示：<br><img src="FunctionInitialize.png" alt="FunctionInitialize"><br>在这个函数中，是把Scoped参数赋给[[Environment]]了，通过追溯规范中FunctionInitialize函数的调用过程，可以找到，Scoped的值为当前执行上下文的词法环境。</p>
+<h3 id="变量的查找规则"><a href="#变量的查找规则" class="headerlink" title="变量的查找规则"></a>变量的查找规则</h3><p>在规范中，规定的词法环境的操作中，除了有5种词法环境记录的创建外，还定义了词法环境对变量的查找规则，如下图所示：<br><img src="GetIdentifierReference.png" alt="GetIdentifierReference"><br>就是首先在当前词法环境的环境记录中找，没有的话就从当前词法环境的外部引用outer中找。从此就理清楚作用域这个问题了，因为在初始化的时候，每个词法环境有对外部词法环境的引用outer，并且变量查找在本词法环境没找到时，会从outer中查找，不断递归这个过程。</p>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>其实理清楚了上面的问题，也就能明白闭包了。举一个经典闭包说明：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> tag = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(tag++)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> b = a();</span><br><span class="line">b();                          <span class="comment">// 1</span></span><br><span class="line">b();                          <span class="comment">// 2</span></span><br></pre></td></tr></table></figure></p>
+<p>先设定函数a的词法环境为EnvA，设匿名函数为n，匿名函数n的词法环境为EnvC。在声明return语句返回的那个n时，n的[[Environment]]会被设为EnvA。执行n的时候，会创建n的词法环境EnvC，其outer为n.[[Environment]]。也就是EnvA。所以，执行b()的时候，在EnvC中并没有tag变量，但是从outer也就是EnvA中找到了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/blog/tags/ECMAScript规范/" rel="tag"># ECMAScript规范</a>
+          
+            <a href="/blog/tags/词法作用域/" rel="tag"># 词法作用域</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/07/06/2017-07-06-ECMAScript2016规范理解（1）-this/" rel="next" title="ECMAScript2016规范理解（1）-this">
+                <i class="fa fa-chevron-left"></i> ECMAScript2016规范理解（1）-this
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/" rel="prev" title="ECMAScript2016规范理解（3）-属性描述对象">
+                ECMAScript2016规范理解（3）-属性描述对象 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文"><span class="nav-number">1.</span> <span class="nav-text">执行上下文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文的组成"><span class="nav-number">2.</span> <span class="nav-text">执行上下文的组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#词法环境"><span class="nav-number">3.</span> <span class="nav-text">词法环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境记录项"><span class="nav-number">3.1.</span> <span class="nav-text">环境记录项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外部词法环境的引用"><span class="nav-number">3.2.</span> <span class="nav-text">外部词法环境的引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域链"><span class="nav-number">4.</span> <span class="nav-text">作用域链</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#词法环境初始化"><span class="nav-number">4.1.</span> <span class="nav-text">词法环境初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量的查找规则"><span class="nav-number">4.2.</span> <span class="nav-text">变量的查找规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包"><span class="nav-number">5.</span> <span class="nav-text">闭包</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="JavaScript,ECMAScript规范," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。第一次写是在2018.01.17">
+<meta name="keywords" content="JavaScript,ECMAScript规范">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript规范的最新动向">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2019/07/03/2019-07-03-ECMAScript规范的最新动向/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。第一次写是在2018.01.17">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-28T16:36:35.816Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript规范的最新动向">
+<meta name="twitter:description" content="这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。第一次写是在2018.01.17">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2019/07/03/2019-07-03-ECMAScript规范的最新动向/"/>
+
+
+
+
+
+  <title>ECMAScript规范的最新动向 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2019/07/03/2019-07-03-ECMAScript规范的最新动向/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ECMAScript规范的最新动向</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-03T00:00:00+08:00">
+                2019-07-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/ECMAScript规范/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript规范</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。第一次写是在2018.01.17<br><a id="more"></a></p>
+<h2 id="2019-10-28-更新"><a href="#2019-10-28-更新" class="headerlink" title="2019.10.28 更新"></a>2019.10.28 更新</h2><h3 id="新增了3个提案到stage4"><a href="#新增了3个提案到stage4" class="headerlink" title="新增了3个提案到stage4"></a>新增了3个提案到stage4</h3><ul>
+<li>BIGINT<ul>
+<li>2017年已经进入了stage3，下文已经详细介绍了这个特性</li>
+</ul>
+</li>
+<li>Promise.allSettled<ul>
+<li>前文已介绍，至此，js中已经有三个promise方法来来处理promise组合,另外两个是: Promise.all,Promise.race</li>
+</ul>
+</li>
+<li>globalThis<ul>
+<li>统一多环境下this的命名，在之前的提案中，叫global，最终改名叫globalThis。以后想使用this，又想让代码在多个环境兼容，就使用globalThis。</li>
+</ul>
+</li>
+</ul>
+<h3 id="新增5个提案到state3"><a href="#新增5个提案到state3" class="headerlink" title="新增5个提案到state3"></a>新增5个提案到state3</h3><ul>
+<li><a href="https://github.com/tc39/proposal-top-level-await" target="_blank" rel="noopener">Top-level await</a><ul>
+<li>在es模块系统中，可以直接不用async也能直接使用await了</li>
+</ul>
+</li>
+<li><a href="https://github.com/tc39/proposal-weakrefs" target="_blank" rel="noopener">WeakReferences</a><ul>
+<li>WeakRef FinalizationGroup。优化垃圾收集，避免内存泄漏</li>
+</ul>
+</li>
+<li><p><a href="https://github.com/tc39/proposal-regexp-match-indices" target="_blank" rel="noopener">RegExp Match Indices</a></p>
+<ul>
+<li>exec方法返回值中增加一个indices属性，标识各个捕获组的start和end</li>
+<li>示例<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">const re1 = /a+(?<span class="xml"><span class="tag">&lt;<span class="name">Z</span>&gt;</span></span>z)?/;</span><br><span class="line"></span><br><span class="line">// indices are relative to start of the input string:</span><br><span class="line">const s1 = "xaaaz";</span><br><span class="line">const m1 = re1.exec(s1);</span><br><span class="line">m1.indices[<span class="string">0</span>][<span class="symbol">0</span>] === 1;</span><br><span class="line">m1.indices[<span class="string">0</span>][<span class="symbol">1</span>] === 5;</span><br><span class="line">s1.slice(...m1.indices[0]) === "aaaz";</span><br><span class="line"></span><br><span class="line">m1.indices[<span class="string">1</span>][<span class="symbol">0</span>] === 4;</span><br><span class="line">m1.indices[<span class="string">1</span>][<span class="symbol">1</span>] === 5;</span><br><span class="line">s1.slice(...m1.indices[1]) === "z";</span><br><span class="line"></span><br><span class="line">m1.indices.groups[<span class="string">"Z"</span>][<span class="symbol">0</span>] === 4;</span><br><span class="line">m1.indices.groups[<span class="string">"Z"</span>][<span class="symbol">1</span>] === 5;</span><br><span class="line">s1.slice(...m1.indices.groups["Z"]) === "z";</span><br><span class="line"></span><br><span class="line">// capture groups that are not matched return <span class="code">`undefined`</span>:</span><br><span class="line">const m2 = re1.exec("xaaay");</span><br><span class="line">m2.indices[1] === undefined;</span><br><span class="line">m2.indices.groups["Z"] === undefined;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><a href="https://github.com/tc39/proposal-string-replaceall" target="_blank" rel="noopener">String.prototype.replaceAll</a></p>
+<ul>
+<li>替换所有字符，解决replace方法使用如：queryString.replace(/+/g, ‘ ‘);需要转义特定字符</li>
+</ul>
+</li>
+<li><a href="https://github.com/tc39/proposal-promise-any" target="_blank" rel="noopener">Promise.any</a><ul>
+<li>Any of the promises was fulfilled</li>
+<li>示例<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Promise.any([</span><br><span class="line">  fetch(<span class="string">'https://v8.dev/'</span>).<span class="keyword">then</span>(<span class="function"><span class="params">()</span> =&gt;</span> <span class="string">'home'</span>),</span><br><span class="line">  fetch(<span class="string">'https://v8.dev/blog'</span>).<span class="keyword">then</span>(<span class="function"><span class="params">()</span> =&gt;</span> <span class="string">'blog'</span>),</span><br><span class="line">  fetch(<span class="string">'https://v8.dev/docs'</span>).<span class="keyword">then</span>(<span class="function"><span class="params">()</span> =&gt;</span> <span class="string">'docs'</span>)</span><br><span class="line">]).<span class="keyword">then</span>(<span class="function"><span class="params">(first)</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="regexp">//</span> Any <span class="keyword">of</span> the promises was fulfilled.</span><br><span class="line">  <span class="built_in">console</span>.log(first);</span><br><span class="line">  <span class="regexp">//</span> → <span class="string">'home'</span></span><br><span class="line">&#125;).<span class="keyword">catch</span>(<span class="function"><span class="params">(error)</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="regexp">//</span> All <span class="keyword">of</span> the promises were rejected.</span><br><span class="line">  <span class="built_in">console</span>.log(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2019-07-03-更新"><a href="#2019-07-03-更新" class="headerlink" title="2019.07.03 更新"></a>2019.07.03 更新</h2><h3 id="新增一个提案到stage4，将会出现在ECMAScript2020中"><a href="#新增一个提案到stage4，将会出现在ECMAScript2020中" class="headerlink" title="新增一个提案到stage4，将会出现在ECMAScript2020中"></a>新增一个提案到stage4，将会出现在ECMAScript2020中</h3><ul>
+<li>import() <ul>
+<li>终于写进规范了,之前在stage3的时候有详细介绍，其实这个我们已经借助webpack使用上这个功能了，chrome从63开始就已经支持了</li>
+<li><a href="https://github.com/tc39/proposal-dynamic-import" target="_blank" rel="noopener">提案信息介绍</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="新增3个提案到stage3"><a href="#新增3个提案到stage3" class="headerlink" title="新增3个提案到stage3"></a>新增3个提案到stage3</h3><ul>
+<li><p><a href="https://github.com/tc39/proposal-for-in-exploration" target="_blank" rel="noopener">for-in mechanics</a><br>规范for-in的迭代顺序</p>
+</li>
+<li><p><a href="https://github.com/tc39/proposal-optional-chaining" target="_blank" rel="noopener">Optional Chaining</a><br>判断属性是否存在再也不用这么麻烦了</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">var</span> <span class="keyword">street </span>= user.<span class="keyword">address </span>&amp;&amp; user.<span class="keyword">address.street;</span></span><br><span class="line"><span class="keyword">// </span>变成</span><br><span class="line"><span class="symbol">var</span> <span class="keyword">street </span>= user.<span class="keyword">address?.street</span></span><br><span class="line"><span class="keyword">const </span>animationDuration = response.settings?.animationDuration ?? <span class="number">300</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a href="https://github.com/tc39/proposal-nullish-coalescing" target="_blank" rel="noopener">Nullish coalescing Operator</a><br>这个和Optional Chaining是配合使用的，当使用了Optional Chaining后，有时只想判断当时null或者undefined时用默认值时，用下面这个代码就会有问题</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">const</span> <span class="string">response</span> <span class="string">=</span> <span class="string">&#123;</span></span><br><span class="line"><span class="attr">  settings:</span> <span class="string">&#123;</span></span><br><span class="line"><span class="attr">    nullValue:</span> <span class="literal">null</span><span class="string">,</span></span><br><span class="line"><span class="attr">    height:</span> <span class="number">400</span><span class="string">,</span></span><br><span class="line"><span class="attr">    animationDuration:</span> <span class="number">0</span><span class="string">,</span></span><br><span class="line"><span class="attr">    headerText:</span> <span class="string">''</span><span class="string">,</span></span><br><span class="line"><span class="attr">    showSplashScreen:</span> <span class="literal">false</span></span><br><span class="line">  <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;;</span></span><br><span class="line"><span class="string">const</span> <span class="string">headerText</span> <span class="string">=</span> <span class="string">response.settings?.headerText</span> <span class="string">||</span> <span class="string">'Hello, world!'</span><span class="string">;</span> <span class="string">//'Hello,</span> <span class="string">world!'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>所以可以用??来解决这个问题，只有为null或者undefined时，才会是false<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">const</span> <span class="string">response</span> <span class="string">=</span> <span class="string">&#123;</span></span><br><span class="line"><span class="attr">  settings:</span> <span class="string">&#123;</span></span><br><span class="line"><span class="attr">    nullValue:</span> <span class="literal">null</span><span class="string">,</span></span><br><span class="line"><span class="attr">    height:</span> <span class="number">400</span><span class="string">,</span></span><br><span class="line"><span class="attr">    animationDuration:</span> <span class="number">0</span><span class="string">,</span></span><br><span class="line"><span class="attr">    headerText:</span> <span class="string">''</span><span class="string">,</span></span><br><span class="line"><span class="attr">    showSplashScreen:</span> <span class="literal">false</span></span><br><span class="line">  <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="string">const</span> <span class="string">undefinedValue</span> <span class="string">=</span> <span class="string">response.settings?.undefinedValue</span> <span class="string">??</span> <span class="string">'some other default'</span><span class="string">;</span> <span class="string">//</span> <span class="attr">result:</span> <span class="string">'some other default'</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="2019-04-04-更新"><a href="#2019-04-04-更新" class="headerlink" title="2019.04.04 更新"></a>2019.04.04 更新</h2><h3 id="新增一个提案到stage4，也就是ECMAScript2020中"><a href="#新增一个提案到stage4，也就是ECMAScript2020中" class="headerlink" title="新增一个提案到stage4，也就是ECMAScript2020中"></a>新增一个提案到stage4，也就是ECMAScript2020中</h3><ul>
+<li>String.prototype.matchAll，这个提案在2018年1月就进入stage3中了</li>
+</ul>
+<h3 id="新增两个提案到stage3"><a href="#新增两个提案到stage3" class="headerlink" title="新增两个提案到stage3"></a>新增两个提案到stage3</h3><ul>
+<li><p>Promise.allSettled<br>因为Promise.all会在有一个reject的时候，就直接reject，并且其他resolve的结果都会丢弃，对于想知道所有结果（无论resolve还是reject）的情况下，就必须重新包装一下，如下代码：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reflect</span>(<span class="params">promise</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> promise.then(</span><br><span class="line">    (v) =&gt; &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123; status: <span class="string">'fulfilled'</span>, value: v &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">    (error) =&gt; &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123; status: <span class="string">'rejected'</span>, reason: error &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> promises = [ fetch(<span class="string">'index.html'</span>), fetch(<span class="string">'https://does-not-exist/'</span>) ];</span><br><span class="line"><span class="keyword">const</span> results = <span class="keyword">await</span> <span class="built_in">Promise</span>.all(promises.map(reflect));</span><br><span class="line"><span class="keyword">const</span> successfulPromises = results.filter(<span class="function"><span class="params">p</span> =&gt;</span> p.status === <span class="string">'fulfilled'</span>);</span><br></pre></td></tr></table></figure>
+<p>而有了allSettled方法后，就不需要这样了，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promises = [ fetch(<span class="string">'index.html'</span>), fetch(<span class="string">'https://does-not-exist/'</span>) ];</span><br><span class="line"><span class="keyword">const</span> results = <span class="keyword">await</span> <span class="built_in">Promise</span>.allSettled(promises);</span><br><span class="line"><span class="keyword">const</span> successfulPromises = results.filter(<span class="function"><span class="params">p</span> =&gt;</span> p.status === <span class="string">'fulfilled'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Numeric separators<br>用下划线(_)做数字分隔符,让数字的可读性更强</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>_000_000_000           <span class="comment">// Ah, so a billion</span></span><br><span class="line"><span class="number">101</span>_475_938<span class="number">.38</span>          <span class="comment">// And this is hundreds of millions</span></span><br><span class="line"></span><br><span class="line">let fee = <span class="number">123</span>_00;       <span class="comment">// $123 (12300 cents, apparently)</span></span><br><span class="line">let fee = <span class="number">12</span>_300;       <span class="comment">// $12,300 (woah, that fee!)</span></span><br><span class="line">let amount = <span class="number">12345</span>_00;  <span class="comment">// 12,345 (1234500 cents, apparently)</span></span><br><span class="line">let amount = <span class="number">123</span>_4500;  <span class="comment">// 123.45 (4-fixed financial)</span></span><br><span class="line">let amount = <span class="number">1</span>_234_500; <span class="comment">// 1,234,500</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="2019-02-19-更新"><a href="#2019-02-19-更新" class="headerlink" title="2019.02.19 更新"></a>2019.02.19 更新</h2><h3 id="新增4个提案到stage4，即ECMAScript2019中"><a href="#新增4个提案到stage4，即ECMAScript2019中" class="headerlink" title="新增4个提案到stage4，即ECMAScript2019中"></a>新增4个提案到stage4，即ECMAScript2019中</h3><p>有三个是新增的内置对象的方法，规范没制定之前已经被大量使用，还有一个是对旧方法的描述进行订正升级。分别是：</p>
+<ul>
+<li>Object.fromEntries</li>
+<li>Well-formed JSON.stringify</li>
+<li>String.prototype.{trimStart,trimEnd}</li>
+<li>Array.prototype.{flat,flatMap}</li>
+</ul>
+<p>以上都在具体提案升级到stage3时已做介绍，这次1月份的会议没有新提案进入stage3</p>
+<h2 id="2018-12-10-更新"><a href="#2018-12-10-更新" class="headerlink" title="2018.12.10 更新"></a>2018.12.10 更新</h2><h3 id="新增两个提案到stage4，即ECMAScript2019中"><a href="#新增两个提案到stage4，即ECMAScript2019中" class="headerlink" title="新增两个提案到stage4，即ECMAScript2019中"></a>新增两个提案到stage4，即ECMAScript2019中</h3><p>这俩提案在进入stage3的时候已经在下文中介绍过了</p>
+<ul>
+<li>Symbol.prototype.description</li>
+<li>Function.prototype.toString revision</li>
+</ul>
+<h3 id="新增一个提案到stage3"><a href="#新增一个提案到stage3" class="headerlink" title="新增一个提案到stage3"></a>新增一个提案到stage3</h3><ul>
+<li><a href="https://github.com/tc39/proposal-hashbang" target="_blank" rel="noopener">Hashbang Grammar</a><br>就是把已经成为事实标准的在cli工具中会使用到的#!符号写入标准</li>
+<li><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br><span class="line"><span class="comment">// in the Script Goal</span></span><br><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br><span class="line"><span class="comment">// in the Module Goal</span></span><br><span class="line"><span class="keyword">export</span> &#123;&#125;;</span><br><span class="line">console.log(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="2018-10-31-更新"><a href="#2018-10-31-更新" class="headerlink" title="2018.10.31 更新"></a>2018.10.31 更新</h2><h3 id="新增一个提案到stage3-1"><a href="#新增一个提案到stage3-1" class="headerlink" title="新增一个提案到stage3"></a>新增一个提案到stage3</h3><ul>
+<li><p>Well-formed JSON.stringify</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Without the proposal:</span></span><br><span class="line"><span class="built_in">JSON</span>.stringify(<span class="string">'\uD800'</span>);</span><br><span class="line"><span class="comment">// → '"&lt;U+D800&gt;"'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// With the proposal:</span></span><br><span class="line"><span class="built_in">JSON</span>.stringify(<span class="string">'\uD800'</span>);</span><br><span class="line"><span class="comment">// → '"\\ud800"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a href="https://docs.google.com/presentation/d/1oTkthPjlRg8FOsyvD9XdA-rPkfLcMrTDCIiHNltIxpw/edit#slide=id.g3b22f3749a_0_51" target="_blank" rel="noopener">slide</a></p>
+<h2 id="2018-08-24-更新"><a href="#2018-08-24-更新" class="headerlink" title="2018.08.24 更新"></a>2018.08.24 更新</h2><h3 id="新增一个提案到stage3-2"><a href="#新增一个提案到stage3-2" class="headerlink" title="新增一个提案到stage3"></a>新增一个提案到stage3</h3></li>
+<li>Object.fromEntries<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">var</span> <span class="selector-tag">a</span> = &#123;<span class="selector-tag">b</span>:<span class="number">1</span>, c:<span class="number">2</span>&#125;</span><br><span class="line">Object.entries(a)                 <span class="comment">// [['b', 1], ['c', 2]]</span></span><br><span class="line"><span class="selector-tag">var</span> e = [[<span class="string">'a'</span>, <span class="number">1</span>], [<span class="string">'c'</span>, <span class="number">2</span>]]</span><br><span class="line"><span class="selector-tag">var</span> obj = Object.fromEntries(e)   <span class="comment">// &#123;b:1, c:2&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="2018-05-30更新"><a href="#2018-05-30更新" class="headerlink" title="2018.05.30更新"></a>2018.05.30更新</h2><h3 id="ECMAScript2018定稿"><a href="#ECMAScript2018定稿" class="headerlink" title="ECMAScript2018定稿"></a>ECMAScript2018定稿</h3><p>从进展来看，ECMAScript2018在1月份的会议上已经定稿了，所以最终ECMAScript2018新增了8个特性分别是：</p>
+<ul>
+<li>Lifting template literal restriction</li>
+<li>s (dotAll) flag for regular expressions</li>
+<li>RegExp named capture groups</li>
+<li>Rest/Spread Properties</li>
+<li>RegExp Lookbehind Assertions</li>
+<li>Unicode property escapes in regular expressions</li>
+<li>Promise.prototype.finally</li>
+<li>async-iteration</li>
+</ul>
+<h3 id="ECMAScript2019"><a href="#ECMAScript2019" class="headerlink" title="ECMAScript2019"></a>ECMAScript2019</h3><h4 id="有两个进入stage4，也就是ECMAScript2019"><a href="#有两个进入stage4，也就是ECMAScript2019" class="headerlink" title="有两个进入stage4，也就是ECMAScript2019"></a>有两个进入stage4，也就是ECMAScript2019</h4><ul>
+<li>Optional catch binding</li>
+<li>JSON superset</li>
+</ul>
+<h4 id="新增-1-个到stage3"><a href="#新增-1-个到stage3" class="headerlink" title="新增 1 个到stage3"></a>新增 1 个到stage3</h4><ul>
+<li><a href="https://github.com/tc39/proposal-Symbol-description" target="_blank" rel="noopener">Symbol.prototype.description    </a><ul>
+<li>通过 description 这个访问器属性，返回Symbol的描述，代替之前通过Symbol.prototype.toString来实现</li>
+</ul>
+</li>
+</ul>
+<h2 id="2018-01-27更新"><a href="#2018-01-27更新" class="headerlink" title="2018.01.27更新"></a>2018.01.27更新</h2><h3 id="新增了6个proposal到stage4："><a href="#新增了6个proposal到stage4：" class="headerlink" title="新增了6个proposal到stage4："></a>新增了6个proposal到stage4：</h3><ul>
+<li>RegExp named capture groups</li>
+<li>Rest/Spread Properties</li>
+<li>RegExp Lookbehind Assertions</li>
+<li>Unicode property escapes in regular expressions</li>
+<li>Promise.prototype.finally</li>
+<li>async-iteration</li>
+</ul>
+<h3 id="新增了3个proposal到stage3"><a href="#新增了3个proposal到stage3" class="headerlink" title="新增了3个proposal到stage3"></a>新增了3个proposal到stage3</h3><ul>
+<li><a href="https://github.com/tc39/proposal-json-superset" target="_blank" rel="noopener">JSON superset</a><ul>
+<li>修正ECMA-262的JSON语法，从而满足是JSON的语法的超集。就是让ECMA-262字符串语法兼容JSON的字符串语法</li>
+</ul>
+</li>
+<li><a href="https://github.com/tc39/proposal-string-left-right-trim" target="_blank" rel="noopener">String.prototype.{trimStart,trimEnd}</a><ul>
+<li>之前规范已经有了padStart/padEnd，这次就加上去除空格的方法</li>
+</ul>
+</li>
+<li><a href="https://github.com/tc39/String.prototype.matchAll" target="_blank" rel="noopener">String.prototype.matchAll</a><ul>
+<li>把字符串中匹配正则的捕获组全部返回，而不是靠循环去取</li>
+</ul>
+</li>
+</ul>
+<h2 id="stage4"><a href="#stage4" class="headerlink" title="stage4"></a>stage4</h2><p>截止到TC39最近的一次例行会议（2017.11.30），目前在stage4的一共有两个Proposal：</p>
+<h3 id="Lifting-template-literal-restriction"><a href="#Lifting-template-literal-restriction" class="headerlink" title="Lifting template literal restriction"></a>Lifting template literal restriction</h3><p>对应的<a href="https://github.com/tc39/proposal-template-literal-revision" target="_blank" rel="noopener">文档</a></p>
+<ul>
+<li><p>现在规范中，对于模板字符串有限制，对\x，\u开头的字符串进行转义</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function latex(strings) <span class="meta">&#123;...&#125;</span></span><br><span class="line"><span class="keyword">let</span> document = latex`</span><br><span class="line">  \newcommand&#123;\unicode&#125;&#123;\textbf&#123;<span class="type">Unicode</span>!&#125;&#125; // 报错</span><br><span class="line">  \newcommand&#123;\xerxes&#125;&#123;\textbf&#123;<span class="type">King</span>!&#125;&#125; // 报错</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>放松对标签模板里面的字符串转义的限制。遇到不合法的字符串转义，就返回undefined，而不是报错，并且从raw属性上面可以得到原始字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tag</span>(<span class="params">strs</span>) </span>&#123;</span><br><span class="line">    strs[<span class="number">0</span>] === <span class="literal">undefined</span></span><br><span class="line">    strs.raw[<span class="number">0</span>] === <span class="string">"\\unicode and \\u&#123;55&#125;"</span>;</span><br><span class="line">&#125;</span><br><span class="line">tag<span class="string">`\unicode and \u&#123;55&#125;`</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="s-dotAll-flag-for-regular-expressions"><a href="#s-dotAll-flag-for-regular-expressions" class="headerlink" title="s (dotAll) flag for regular expressions"></a>s (dotAll) flag for regular expressions</h3><p>对应的<a href="https://github.com/tc39/proposal-regexp-dotall-flag" target="_blank" rel="noopener">文档</a></p>
+<ul>
+<li>以前正则里的<code>.</code>不能匹配<code>\n \r</code>等换行符，新增<code>s</code>flag，支持单行模式，从而让<code>.</code>能匹配换行符<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/./</span>s.test(<span class="string">'\n'</span>) <span class="regexp">//</span> true</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="stage3"><a href="#stage3" class="headerlink" title="stage3"></a>stage3</h2><p>目前在stage3中有17个</p>
+<h3 id="1-Function-prototype-toString"><a href="#1-Function-prototype-toString" class="headerlink" title="1 Function.prototype.toString"></a>1 Function.prototype.toString</h3><ul>
+<li>以前规范规定的很模糊，导致各引擎实现的不一致。比如对换行空格的处理、内置函数和自定义函数的返回</li>
+<li>明确、具体的规定这个方法的针对不同的函数的返回。<ul>
+<li>内置函数、宿主函数、绑定函数一律返回”function () { [native code] }”</li>
+<li>通过ECMAScript定义的，一字不落的返回和源代码一样的文本</li>
+<li>通过Function等构造函数动态创建的，合成一个源代码返回，针对不同的情况，规定返回格式</li>
+<li>其余情况返回TypeError</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-Promise-prototype-finally"><a href="#2-Promise-prototype-finally" class="headerlink" title="2 Promise.prototype.finally"></a>2 Promise.prototype.finally</h3><ul>
+<li>Promise原生提供finally方法<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Promise.resolve(<span class="number">2</span>)</span><br><span class="line">.<span class="keyword">then</span>(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;, <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;)</span><br><span class="line">.<span class="keyword">finally</span>(function () &#123;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="3-Optional-catch-binding"><a href="#3-Optional-catch-binding" class="headerlink" title="3 Optional catch binding"></a>3 Optional catch binding</h3><ul>
+<li><p>try{}catch(e){}的e参数变为可选</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">catch</span>()&#123;</span><br><span class="line">  // 可不写参数了</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>chrome66已经实现</p>
+</li>
+</ul>
+<h3 id="4-global"><a href="#4-global" class="headerlink" title="4 global"></a>4 global</h3><ul>
+<li>增加一个名为global的，在浏览器、nodejs、Web Workers中通用的全局对象，用来访问全局变量<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">global</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!global.global) &#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">Object</span>.defineProperty) &#123;</span><br><span class="line">			<span class="built_in">Object</span>.defineProperty(global, <span class="string">'global'</span>, &#123;</span><br><span class="line">				configurable: <span class="literal">true</span>,</span><br><span class="line">				enumerable: <span class="literal">false</span>,</span><br><span class="line">				value: global,</span><br><span class="line">				writable: <span class="literal">true</span></span><br><span class="line">			&#125;);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			global.global = global;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)(<span class="keyword">typeof</span> <span class="keyword">this</span> === <span class="string">'object'</span> ? <span class="keyword">this</span> : <span class="built_in">Function</span>(<span class="string">'return this'</span>)())</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5-import-specifier"><a href="#5-import-specifier" class="headerlink" title="5 import(specifier)"></a>5 import(specifier)</h3><ul>
+<li>ES2015就写入规范的import，原生提供了静态的、同步的加载模块的方式</li>
+<li>import()用来支持动态加载模块，返回一个Promise  <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>(<span class="string">'a.js'</span>)</span><br><span class="line">.<span class="keyword">then</span>(myModule =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(myModule.<span class="keyword">default</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="6-import-meta"><a href="#6-import-meta" class="headerlink" title="6 import.meta"></a>6 import.meta</h3><ul>
+<li>给模块内部提供一种获取上下文信息的途径<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"module"</span> src=<span class="string">"path/to/hamster-displayer.mjs"</span> data-<span class="built_in">size</span>=<span class="string">"500"</span>&gt;&lt;/script&gt;</span><br><span class="line">(async () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> response = await fetch(<span class="keyword">new</span> URL(<span class="string">"../hamsters.jpg"</span>, <span class="keyword">import</span>.meta.url));</span><br><span class="line">  <span class="keyword">const</span> blob = await response.blob();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">size</span> = <span class="keyword">import</span>.meta.scriptElement.dataset.<span class="built_in">size</span> || <span class="number">300</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">image</span> = <span class="keyword">new</span> Image();</span><br><span class="line">  <span class="built_in">image</span>.src = URL.createObjectURL(blob);</span><br><span class="line">  <span class="built_in">image</span>.<span class="built_in">width</span> = <span class="built_in">image</span>.<span class="built_in">height</span> = <span class="built_in">size</span>;</span><br><span class="line"></span><br><span class="line">  document.body.appendChild(<span class="built_in">image</span>);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="7-Rest-Spread-Properties"><a href="#7-Rest-Spread-Properties" class="headerlink" title="7 Rest/Spread Properties"></a>7 Rest/Spread Properties</h3><ul>
+<li>对象支持展开运算符和函数形参的剩余参数语法<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const obj = &#123;foo: <span class="number">1</span>, <span class="keyword">bar: </span><span class="number">2</span>, <span class="keyword">baz: </span><span class="number">3</span>&#125;<span class="comment">;</span></span><br><span class="line">const &#123;foo, ...rest&#125; = obj<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">const</span> <span class="string">obj</span> <span class="string">=</span> <span class="string">&#123;foo:</span> <span class="number">1</span><span class="string">,</span> <span class="attr">bar:</span> <span class="number">2</span><span class="string">,</span> <span class="attr">baz:</span> <span class="number">3</span><span class="string">&#125;;</span></span><br><span class="line"><span class="string">console.log(&#123;...obj,</span> <span class="attr">qux:</span> <span class="number">4</span><span class="string">&#125;)</span></span><br><span class="line"><span class="string">//&#123;foo:</span> <span class="number">1</span><span class="string">,</span> <span class="attr">bar:</span> <span class="number">2</span><span class="string">,</span> <span class="attr">baz:</span> <span class="number">3</span><span class="string">,</span> <span class="attr">qux:</span> <span class="number">4</span> <span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="8-class-fields"><a href="#8-class-fields" class="headerlink" title="8 class-fields"></a>8 class-fields</h3><ul>
+<li>class语法新增声明公共字段和私有字段的方式<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Counter</span> <span class="keyword">extends</span> <span class="title">HTMLElement</span> </span>&#123;</span><br><span class="line">  #x = <span class="number">0</span>; <span class="comment">// 私有字段</span></span><br><span class="line">  y = <span class="number">1</span>; <span class="comment">// 公共字段</span></span><br><span class="line">  a () &#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="9-Private-methods-and-accessors"><a href="#9-Private-methods-and-accessors" class="headerlink" title="9 Private methods and accessors"></a>9 Private methods and accessors</h3><ul>
+<li>class语法新增申明私有方法和访问器<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Counter</span> <span class="keyword">extends</span> <span class="title">HTMLElement</span> </span>&#123;</span><br><span class="line">  #x = <span class="number">0</span>; <span class="comment">// 私有字段</span></span><br><span class="line">  y = <span class="number">1</span>; <span class="comment">// 公共字段</span></span><br><span class="line">  #a () &#123;</span><br><span class="line">    <span class="keyword">this</span>.#x++</span><br><span class="line">  &#125;</span><br><span class="line">  get #x() &#123;&#125;</span><br><span class="line">  set #x(value) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="10-async-iteration"><a href="#10-async-iteration" class="headerlink" title="10 async-iteration"></a>10 async-iteration</h3><ul>
+<li>新增异步迭代器，针对异步数据迭代<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; value, done &#125; = syncIterator.next();</span><br><span class="line"></span><br><span class="line">asyncIterator.next().then(<span class="function">(<span class="params">&#123; value, done &#125;</span>) =&gt;</span> <span class="comment">/* ... */</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> <span class="keyword">await</span> (<span class="keyword">const</span> line <span class="keyword">of</span> readLines(filePath)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(line);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="11-RegExp-Lookbehind-Assertions"><a href="#11-RegExp-Lookbehind-Assertions" class="headerlink" title="11 RegExp Lookbehind Assertions"></a>11 RegExp Lookbehind Assertions</h3><ul>
+<li>正则表达式以前只有先行断言，现在新增正向后行断言(?&lt;=…)和负向后行断言(?&lt;!…)<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/<span class="comment">(?&lt;=\$)</span>\d+<span class="comment">(\.\d*)</span>?/.test<span class="comment">('$10.53')</span> <span class="comment">// true</span></span><br><span class="line">/<span class="comment">(?&lt;=\$)</span>\d+<span class="comment">(\.\d*)</span>?/.test<span class="comment">('&amp;10.53')</span> <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line">/<span class="comment">(?&lt;!\$)</span>\d+<span class="comment">(\.\d*)</span>?/.test<span class="comment">('$10.53')</span> <span class="comment">// false</span></span><br><span class="line">/<span class="comment">(?&lt;!\$)</span>\d+<span class="comment">(\.\d*)</span>?/.test<span class="comment">('&amp;10.53')</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="12-Unicode-property-escapes-in-regular-expressions"><a href="#12-Unicode-property-escapes-in-regular-expressions" class="headerlink" title="12 Unicode property escapes in regular expressions"></a>12 Unicode property escapes in regular expressions</h3><ul>
+<li><p>正则表达式新增一种方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>const regex = /^\p{Decimal_Number}+$/u;<br>regex.test(‘𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼’);<br>// → true</p>
+<p>const regex = /\p{Emoji_Modifier_Base}$/u;<br>regex.test(‘⌚’);<br>// → true</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### <span class="number">13</span> RegExp named capture groups</span><br><span class="line">* 正则表达式新增命名捕获分组语法```(?&lt;name&gt;...)</span><br></pre></td></tr></table></figure>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let &#123;groups: &#123;<span class="keyword">one</span>, <span class="keyword">two</span>&#125;&#125; = /^(?&lt;<span class="keyword">one</span>&gt;.*):(?&lt;<span class="keyword">two</span>&gt;.*)$/<span class="keyword">u</span>.exec('foo:bar');</span><br><span class="line">console.<span class="built_in">log</span>(`<span class="keyword">one</span>: <span class="variable">$&#123;one&#125;</span>, <span class="keyword">two</span>: <span class="variable">$&#123;two&#125;</span>`);  <span class="comment">// prints one: foo, two: bar</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="14-Numeric-separators"><a href="#14-Numeric-separators" class="headerlink" title="14 Numeric separators"></a>14 Numeric separators</h3><p><a href="https://github.com/tc39/proposal-numeric-separator" target="_blank" rel="noopener">见文档</a>,就是利用underscore的_符号，对数字进行分割，从而更直观的知道数字的大小，比如<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>_000_000_000           <span class="comment">// Ah, so a billion</span></span><br><span class="line"><span class="number">101</span>_475_938<span class="number">.38</span>          <span class="comment">// And this is hundreds of millions</span></span><br><span class="line"></span><br><span class="line">let fee = <span class="number">123</span>_00;       <span class="comment">// $123 (12300 cents, apparently)</span></span><br><span class="line">let fee = <span class="number">12</span>_300;       <span class="comment">// $12,300 (woah, that fee!)</span></span><br><span class="line">let amount = <span class="number">12345</span>_00;  <span class="comment">// 12,345 (1234500 cents, apparently)</span></span><br><span class="line">let amount = <span class="number">123</span>_4500;  <span class="comment">// 123.45 (4-fixed financial)</span></span><br><span class="line">let amount = <span class="number">1</span>_234_500; <span class="comment">// 1,234,500</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="15-regexp-legacy-features"><a href="#15-regexp-legacy-features" class="headerlink" title="15 regexp-legacy-features"></a>15 regexp-legacy-features</h3><ul>
+<li>将很多浏览器已经实现了的，但是没有写入规范的RegExp构造函数上的属性，比如RegExp.$1-9、RegExp.input等写入规范，并且规定这些属性的特性。<a href="https://github.com/tc39/proposal-regexp-legacy-features/blob/master/changes.md" target="_blank" rel="noopener">具体改动</a></li>
+</ul>
+<h3 id="16-BigInt"><a href="#16-BigInt" class="headerlink" title="16 BigInt"></a>16 BigInt</h3><ul>
+<li><p>新增一个数值类型：BigInt，用来表示大于2^53和小于-2^53的整数。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> <span class="number">123</span>n === <span class="string">'bigint'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Number和BigInt不能互转</p>
+</li>
+<li>重载了+ / 等运算符</li>
+</ul>
+<h3 id="17-Array-prototype-flatMap-flat"><a href="#17-Array-prototype-flatMap-flat" class="headerlink" title="17 Array.prototype.{flatMap,flat}"></a>17 Array.prototype.{flatMap,flat}</h3><ul>
+<li>Array增加了两个原型方法，拍平数组（flatten），以及可以传入处理函数处理后再拍平（flatMap）</li>
+<li>flatten 由于很多第第三方库已经实现了这个方法，所以为了避免冲突，这个方法在规范中已经改名为flat，并且chrome69已经实现了</li>
+</ul>
+<h2 id="ASI和class-fields"><a href="#ASI和class-fields" class="headerlink" title="ASI和class fields"></a>ASI和class fields</h2><p>由于增加了class field语法，这就导致和原本的ASI会有一些冲突迷惑的地方，会让ASI很难处理。具体的问题可以看这个<a href="https://docs.google.com/presentation/d/1bPzE6i_Bpm6FXgzfx9XFJNHGkVcM42lux-6bUNhxpl4/edit#slide=id.g29382c0eba_0_157" target="_blank" rel="noopener">slide</a>。经过讨论，TC39决定在class内还是要ASI，并且在规范内增加个声明，描述ASI可能遇到风险，但是有一句话是，explicit semicolon use is recommended。激起了社区广泛的讨论，质疑TC39是不是从官方的角度建议加上分好，不推荐semicolon-less风格。具体讨论见<a href="https://github.com/tc39/ecma262/pull/1062" target="_blank" rel="noopener">PR</a></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://kangax.github.io/compat-table/esnext/" target="_blank" rel="noopener">各个提案浏览器的实现情况</a></li>
+<li><a href="https://github.com/tc39/proposals/blob/master/README.md" target="_blank" rel="noopener">所有proposal</a></li>
+<li><a href="https://github.com/rwaldron/tc39-notes" target="_blank" rel="noopener">tc39的会议纪要</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/blog/tags/ECMAScript规范/" rel="tag"># ECMAScript规范</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/" rel="next" title="ECMAScript2016规范理解（8）-new表达式的执行过程">
+                <i class="fa fa-chevron-left"></i> ECMAScript2016规范理解（8）-new表达式的执行过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2019/07/03/2019-07-03-《中国历代政治得失》读后感/" rel="prev" title="《中国历代政治得失》读后感">
+                《中国历代政治得失》读后感 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2019-10-28-更新"><span class="nav-number">1.</span> <span class="nav-text">2019.10.28 更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增了3个提案到stage4"><span class="nav-number">1.1.</span> <span class="nav-text">新增了3个提案到stage4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增5个提案到state3"><span class="nav-number">1.2.</span> <span class="nav-text">新增5个提案到state3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2019-07-03-更新"><span class="nav-number">2.</span> <span class="nav-text">2019.07.03 更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增一个提案到stage4，将会出现在ECMAScript2020中"><span class="nav-number">2.1.</span> <span class="nav-text">新增一个提案到stage4，将会出现在ECMAScript2020中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增3个提案到stage3"><span class="nav-number">2.2.</span> <span class="nav-text">新增3个提案到stage3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2019-04-04-更新"><span class="nav-number">3.</span> <span class="nav-text">2019.04.04 更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增一个提案到stage4，也就是ECMAScript2020中"><span class="nav-number">3.1.</span> <span class="nav-text">新增一个提案到stage4，也就是ECMAScript2020中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增两个提案到stage3"><span class="nav-number">3.2.</span> <span class="nav-text">新增两个提案到stage3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2019-02-19-更新"><span class="nav-number">4.</span> <span class="nav-text">2019.02.19 更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增4个提案到stage4，即ECMAScript2019中"><span class="nav-number">4.1.</span> <span class="nav-text">新增4个提案到stage4，即ECMAScript2019中</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-12-10-更新"><span class="nav-number">5.</span> <span class="nav-text">2018.12.10 更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增两个提案到stage4，即ECMAScript2019中"><span class="nav-number">5.1.</span> <span class="nav-text">新增两个提案到stage4，即ECMAScript2019中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增一个提案到stage3"><span class="nav-number">5.2.</span> <span class="nav-text">新增一个提案到stage3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-10-31-更新"><span class="nav-number">6.</span> <span class="nav-text">2018.10.31 更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增一个提案到stage3-1"><span class="nav-number">6.1.</span> <span class="nav-text">新增一个提案到stage3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-08-24-更新"><span class="nav-number">7.</span> <span class="nav-text">2018.08.24 更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增一个提案到stage3-2"><span class="nav-number">7.1.</span> <span class="nav-text">新增一个提案到stage3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-05-30更新"><span class="nav-number">8.</span> <span class="nav-text">2018.05.30更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ECMAScript2018定稿"><span class="nav-number">8.1.</span> <span class="nav-text">ECMAScript2018定稿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ECMAScript2019"><span class="nav-number">8.2.</span> <span class="nav-text">ECMAScript2019</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#有两个进入stage4，也就是ECMAScript2019"><span class="nav-number">8.2.1.</span> <span class="nav-text">有两个进入stage4，也就是ECMAScript2019</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#新增-1-个到stage3"><span class="nav-number">8.2.2.</span> <span class="nav-text">新增 1 个到stage3</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-01-27更新"><span class="nav-number">9.</span> <span class="nav-text">2018.01.27更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增了6个proposal到stage4："><span class="nav-number">9.1.</span> <span class="nav-text">新增了6个proposal到stage4：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增了3个proposal到stage3"><span class="nav-number">9.2.</span> <span class="nav-text">新增了3个proposal到stage3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stage4"><span class="nav-number">10.</span> <span class="nav-text">stage4</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Lifting-template-literal-restriction"><span class="nav-number">10.1.</span> <span class="nav-text">Lifting template literal restriction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#s-dotAll-flag-for-regular-expressions"><span class="nav-number">10.2.</span> <span class="nav-text">s (dotAll) flag for regular expressions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stage3"><span class="nav-number">11.</span> <span class="nav-text">stage3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Function-prototype-toString"><span class="nav-number">11.1.</span> <span class="nav-text">1 Function.prototype.toString</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Promise-prototype-finally"><span class="nav-number">11.2.</span> <span class="nav-text">2 Promise.prototype.finally</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Optional-catch-binding"><span class="nav-number">11.3.</span> <span class="nav-text">3 Optional catch binding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-global"><span class="nav-number">11.4.</span> <span class="nav-text">4 global</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-import-specifier"><span class="nav-number">11.5.</span> <span class="nav-text">5 import(specifier)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-import-meta"><span class="nav-number">11.6.</span> <span class="nav-text">6 import.meta</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Rest-Spread-Properties"><span class="nav-number">11.7.</span> <span class="nav-text">7 Rest/Spread Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-class-fields"><span class="nav-number">11.8.</span> <span class="nav-text">8 class-fields</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-Private-methods-and-accessors"><span class="nav-number">11.9.</span> <span class="nav-text">9 Private methods and accessors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-async-iteration"><span class="nav-number">11.10.</span> <span class="nav-text">10 async-iteration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-RegExp-Lookbehind-Assertions"><span class="nav-number">11.11.</span> <span class="nav-text">11 RegExp Lookbehind Assertions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-Unicode-property-escapes-in-regular-expressions"><span class="nav-number">11.12.</span> <span class="nav-text">12 Unicode property escapes in regular expressions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-Numeric-separators"><span class="nav-number">11.13.</span> <span class="nav-text">14 Numeric separators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-regexp-legacy-features"><span class="nav-number">11.14.</span> <span class="nav-text">15 regexp-legacy-features</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-BigInt"><span class="nav-number">11.15.</span> <span class="nav-text">16 BigInt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#17-Array-prototype-flatMap-flat"><span class="nav-number">11.16.</span> <span class="nav-text">17 Array.prototype.{flatMap,flat}</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASI和class-fields"><span class="nav-number">12.</span> <span class="nav-text">ASI和class fields</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">13.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

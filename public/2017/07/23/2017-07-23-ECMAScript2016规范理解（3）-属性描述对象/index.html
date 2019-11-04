@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="JavaScript,ECMAScript规范," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="属性描述对象在ECMAScript5.1就已经成为标准了，但是IE9+才支持。属性描述对象在规范中是一个规范类型，也就是用来更好的描述规范的，其实也就是用来描述对象的属性的。大名鼎鼎的Vue.js正是使用的这个属性描述对象，实现的数据双向绑定，也正是因为如此，才不支持IE9以下浏览器。">
+<meta name="keywords" content="JavaScript,ECMAScript规范">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript2016规范理解（3）-属性描述对象">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="属性描述对象在ECMAScript5.1就已经成为标准了，但是IE9+才支持。属性描述对象在规范中是一个规范类型，也就是用来更好的描述规范的，其实也就是用来描述对象的属性的。大名鼎鼎的Vue.js正是使用的这个属性描述对象，实现的数据双向绑定，也正是因为如此，才不支持IE9以下浏览器。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/dataAttr.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/accessAttr.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/defineProperty.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/validateDesc.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/getDesc.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/setIntegrityLevel.png">
+<meta property="og:updated_time" content="2018-03-19T16:17:27.108Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript2016规范理解（3）-属性描述对象">
+<meta name="twitter:description" content="属性描述对象在ECMAScript5.1就已经成为标准了，但是IE9+才支持。属性描述对象在规范中是一个规范类型，也就是用来更好的描述规范的，其实也就是用来描述对象的属性的。大名鼎鼎的Vue.js正是使用的这个属性描述对象，实现的数据双向绑定，也正是因为如此，才不支持IE9以下浏览器。">
+<meta name="twitter:image" content="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/dataAttr.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/"/>
+
+
+
+
+
+  <title>ECMAScript2016规范理解（3）-属性描述对象 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2017/07/23/2017-07-23-ECMAScript2016规范理解（3）-属性描述对象/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ECMAScript2016规范理解（3）-属性描述对象</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-23T00:00:00+08:00">
+                2017-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/ECMAScript规范/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript规范</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>属性描述对象在ECMAScript5.1就已经成为标准了，但是IE9+才支持。属性描述对象在规范中是一个规范类型，也就是用来更好的描述规范的，其实也就是用来描述对象的属性的。大名鼎鼎的Vue.js正是使用的这个属性描述对象，实现的数据双向绑定，也正是因为如此，才不支持IE9以下浏览器。</p>
+<a id="more"></a>
+<h2 id="属性描述对象"><a href="#属性描述对象" class="headerlink" title="属性描述对象"></a>属性描述对象</h2><p>在规范中中的6.2.4就是讲属性描述对象的，属性描述对象的具体属性则在6.1.7.1中说明的。因为6.2是讲规范属性，6.1是讲ECMAScript语言，其中6.1.7又是专门讲对象的小节。<br>在规范中，对属性描述对象又做了进一步的分类，属性描述对象一般有两种比较常见，叫data Property Descriptors 和 accessor Property Descriptors。我这里就简单的翻译为数据属性描述对象，访问器属性描述对象。而他们的分类标准就是，只要有[[Value]] 或者 [[Writable]]属性其中一个或者两个，就算数据属性描述对象，只要有[[Get]] 或者 [[Set]]属性其中的一个或者两个，就算是访问器属性描述对象。但是一个属性描述对象不能既是数据描述符，同时也是访问器属性描述对象。如果两则都不是，就叫普通属性描述对象，这个分类很少见，其实就是为了分类的完整性，而弄出这个分类的。常见的都是数据属性描述对象和访问器属性描述对象，对象的属性的属性描述对象只能是这两种之一。</p>
+<h3 id="数据属性描述对象"><a href="#数据属性描述对象" class="headerlink" title="数据属性描述对象"></a>数据属性描述对象</h3><p>属性描述对象一共可以有4个属性，如图所示：<br><img src="dataAttr.png" alt="dataAttr.png"></p>
+<ul>
+<li>[[Value]]就是这个属性的值，默认undefined</li>
+<li>[[Writable]]，决定了这个属性的[[Set]]操作是否成功，默认false</li>
+<li>[[Enumerable]]，枚举决定了这个属性能否在for-in和Object.keys()中出现，默认false</li>
+<li>[[Configurable]]，可配置性，如果为false，那么除了把[[Writable]]改变为false和修改[[Value]]，其他操作，比如删除属性，把属性改成访问器属性等等都会报错。默认值是false。</li>
+</ul>
+<h3 id="访问器属性描述对象"><a href="#访问器属性描述对象" class="headerlink" title="访问器属性描述对象"></a>访问器属性描述对象</h3><p>访问器属性描述对象也是一共可以有4个属性，如图所示：<br><img src="accessAttr.png" alt="accessAttr"><br>可以看出，它也有[[Enumerable]]和[[Configurable]]属性，然后还有两个访问器属性描述对象特有的属性：</p>
+<ul>
+<li>[[Set]]，默认值是undefined，其值只能是函数或者undefined，当set操作被调用时，是会以要赋值的那个值作为唯一参数调用函数的[[Call]]操作。一般情况下，这个操作应该都会对[[Get]]操作产生影响，但不是必须，可以和[[Get]]没有任何关系。</li>
+<li>[[Get]], 默认值是undefined其值只能是函数或者undefined，当get操作被调用时，是会以空参数的形式调用这个函数的[[Call]]操作。</li>
+</ul>
+<h2 id="属性描述对象相关操作"><a href="#属性描述对象相关操作" class="headerlink" title="属性描述对象相关操作"></a>属性描述对象相关操作</h2><h3 id="Object-defineProperty（O，P，Desc）"><a href="#Object-defineProperty（O，P，Desc）" class="headerlink" title="Object.defineProperty（O，P，Desc）"></a>Object.defineProperty（O，P，Desc）</h3><p>给一个对象添加属性或者修改属性一般有两种方式，一是直接使用赋值表达式，二就是使用Object.defineProperty。这个方法接受三个参数：O就是要改变的对象，P是要改变的属性，Desc就是要给这个属性定义的属性描述对象。Object.defineProperty执行的具体步骤在规范的19.1.2.4节，如下图所示：<br><img src="defineProperty.png" alt="defineProperty.png"><br>继续追规范下去，会发现最终是执行如下所示操作：<br><img src="validateDesc.png" alt="validateDesc"><br>这个函数的执行要判断很多种情况，总结如下：</p>
+<ul>
+<li>如果属性之前的Desc为undefined，那就是直接更改为最新的Desc，相应类型的属性描述对象的缺省字段将被设为默认值。</li>
+<li>如果属性之前的Desc和将要赋值的Desc一样，那么直接返回true。</li>
+<li>如果新的Desc既不是</li>
+<li>如果现在的Desc中的[[Configurable]]为false，那么除了把[[Writable]]有true改为false，或者是在[[Writable]]为true的情况下，修改[[Value]],剩余情况一律返回false</li>
+<li>只要[[Configurable]]为true，任何操作都是允许的，就算[[Writable]]为false，也能修改[[Value]]</li>
+</ul>
+<h3 id="Object-defineProperties-O-P"><a href="#Object-defineProperties-O-P" class="headerlink" title="Object.defineProperties(O, P)"></a>Object.defineProperties(O, P)</h3><p>这个函数有两个参数，一个是对象O，另一个也是是一个对象，但是这个对象的key是要改变的属性名，value为这个属性的属性描述对象，实际操作就是根据key，不断的循环调用Object.defineProperty（O，key，value）</p>
+<h3 id="Object-getOwnPropertyDescriptor"><a href="#Object-getOwnPropertyDescriptor" class="headerlink" title="Object.getOwnPropertyDescriptor"></a>Object.getOwnPropertyDescriptor</h3><p>在规范中，关键步骤如下所示：<br><img src="getDesc.png" alt="getDesc"><br>也就是说，它会把规范类型属性描述对象，转换为一个语言类型对象，并且会把这个类型的属性描述对象的所有属性都返回。</p>
+<h3 id="Object-getOwnPropertyDescriptors"><a href="#Object-getOwnPropertyDescriptors" class="headerlink" title="Object.getOwnPropertyDescriptors"></a>Object.getOwnPropertyDescriptors</h3><p>这个方法是在ECMAScript2017中定义的和defineProperties一样，具体实现肯定和getOwnPropertyDescriptor一样，这是是返回对象的全部属性的属性描述符。</p>
+<h3 id="Object-seal-amp-amp-Object-freeze"><a href="#Object-seal-amp-amp-Object-freeze" class="headerlink" title="Object.seal &amp;&amp; Object.freeze"></a>Object.seal &amp;&amp; Object.freeze</h3><p>这两个函数在规范中最终都是调用的同一个内部操作，如下所示：<br><img src="setIntegrityLevel.png" alt="setIntegrityLevel"><br>seal是执行SetIntegrityLevel(O, “sealed”)，freeze是执行SetIntegrityLevel(O, “frozen”)。从以上可以看出这两个函数的区别：</p>
+<ul>
+<li>seal只是封印的意思，只是把[[Configurable]]设置false</li>
+<li>freeze是冰封的意思，会同时把[[Configurable]]和[[Writable]]设为false。也就是说这个属性将不能再发生任何改变。</li>
+</ul>
+<p>### </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/blog/tags/ECMAScript规范/" rel="tag"># ECMAScript规范</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/" rel="next" title="ECMAScript2016规范理解（2）-执行上下文和词法作用域">
+                <i class="fa fa-chevron-left"></i> ECMAScript2016规范理解（2）-执行上下文和词法作用域
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/08/16/2017-08-16-ECMAScript2016规范理解（4）-let/" rel="prev" title="ECMAScript2016规范理解（4）-let">
+                ECMAScript2016规范理解（4）-let <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#属性描述对象"><span class="nav-number">1.</span> <span class="nav-text">属性描述对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据属性描述对象"><span class="nav-number">1.1.</span> <span class="nav-text">数据属性描述对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问器属性描述对象"><span class="nav-number">1.2.</span> <span class="nav-text">访问器属性描述对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性描述对象相关操作"><span class="nav-number">2.</span> <span class="nav-text">属性描述对象相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-defineProperty（O，P，Desc）"><span class="nav-number">2.1.</span> <span class="nav-text">Object.defineProperty（O，P，Desc）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-defineProperties-O-P"><span class="nav-number">2.2.</span> <span class="nav-text">Object.defineProperties(O, P)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-getOwnPropertyDescriptor"><span class="nav-number">2.3.</span> <span class="nav-text">Object.getOwnPropertyDescriptor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-getOwnPropertyDescriptors"><span class="nav-number">2.4.</span> <span class="nav-text">Object.getOwnPropertyDescriptors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-seal-amp-amp-Object-freeze"><span class="nav-number">2.5.</span> <span class="nav-text">Object.seal &amp;&amp; Object.freeze</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

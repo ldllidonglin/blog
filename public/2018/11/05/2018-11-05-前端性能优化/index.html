@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="性能," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前端性能优化是一个老生常谈的问题，并且在面试的时候，这个题几乎是面试官非常喜欢的一道题。这篇文章主要是总结自己之前在移动端H5性能优化上的实践和思考。">
+<meta name="keywords" content="性能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端性能优化">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2018/11/05/2018-11-05-前端性能优化/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="前端性能优化是一个老生常谈的问题，并且在面试的时候，这个题几乎是面试官非常喜欢的一道题。这篇文章主要是总结自己之前在移动端H5性能优化上的实践和思考。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-04T18:52:44.060Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端性能优化">
+<meta name="twitter:description" content="前端性能优化是一个老生常谈的问题，并且在面试的时候，这个题几乎是面试官非常喜欢的一道题。这篇文章主要是总结自己之前在移动端H5性能优化上的实践和思考。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2018/11/05/2018-11-05-前端性能优化/"/>
+
+
+
+
+
+  <title>前端性能优化 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2018/11/05/2018-11-05-前端性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">前端性能优化</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T00:00:00+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前端性能优化是一个老生常谈的问题，并且在面试的时候，这个题几乎是面试官非常喜欢的一道题。这篇文章主要是总结自己之前在移动端H5性能优化上的实践和思考。<br><a id="more"></a></p>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><p>对于前端页面来说来说，性能优化的点可以分为两大类：加载性能优化和渲染性能优化。加载性能越好，用户就能越快的看到页面，跳失率越低，从商业的角度来看就是收益会越高。渲染性能决定了数据到达用户手机后能够多块的展现，这一块其实还包括了交互性能。</p>
+<h3 id="加载性能"><a href="#加载性能" class="headerlink" title="加载性能"></a>加载性能</h3><h4 id="静态资源加载"><a href="#静态资源加载" class="headerlink" title="静态资源加载"></a>静态资源加载</h4><ul>
+<li>速度。主要就是两点：减小体积、减少请求数。<ul>
+<li>js和css，目前正常的线上应用应该都会压缩代码、合并combo请求。理想是1个css、1个js请求。对于目前大量的SPA，并且基本都会依赖webpack等打包工具，需要注意减少不必要的无用包被打到bundle中，可以利用<a href="https://www.npmjs.com/package/webpack-bundle-analyzer" target="_blank" rel="noopener">webpack-bundle-analyzer</a>这个工具进行分析。还有就是充分利用webpack提供的各种分包工具、依赖动态加载、异步路由等等工具实现首屏加载的资源最小化。</li>
+<li>图片压缩。tiny.png是一个很好的在线压缩图片的地方。最好是能有一个公共库处理所有图片资源。最简单的比如安卓采用webp。如果cdn支持压缩参数，那必须根据网络环境、设备屏幕大小、图片所占空间的尺寸，来控制图片尺寸、压缩比例。还可以用DataURI、iconfont、svg等方式替换图片，也可以有效减少图片请求</li>
+<li>域名收敛。由于目前移动端HTTP/2的支持率已经很高了，所以已经不需要分拆域名了，收敛域名反而能加快资源的加载。期望的效果是：图片一个域名，js和css一个域名、动态请求一个域名。</li>
+</ul>
+</li>
+<li>优先级。<ul>
+<li>如果是后端渲染的页面，那在dom渲染之前不应该出现任何js，因为渲染DOM的优先级是最高的。如果是SPA等采用前端渲染的应用的话那就另说。</li>
+<li>css要在head中，但是在移动端要考虑首屏，所以如果css很多的话，需要考虑css分拆，在head中只加载首屏用到的css，非首屏的css可以在后面引入。</li>
+<li>减少不必要的DOM。最好的方案应该是首屏直出，后面的DOM用前端渲染。或者使用懒渲染。直出的页面只有占坑的DOM，随着滚动加载对应的DOM。或者对于需要接口数据来渲染的DOM，可以用js来渲染，而不是直接将全部DOM预设在HTML中，影响文档加载时间和DOM渲染时间。</li>
+<li>所有图片、视频都必须懒加载。无论是img标签还是背景图片，一律懒加载。因为不懒加载的话，非首屏的图片会在页面进入的时候，严重占用系统资源，影响首屏时间。图片懒加载需要考虑一个问题就是懒加载是由js触发的，所以其执行的时机一定要靠前，因为一开始进入页面的时候，首屏图片由于懒加载时也是没有加载渲染的，所以可以考虑把懒加载的相关逻辑代码直接内嵌在html中，并且在其他的js之前。让首屏的图片尽可能的快加载。如果页面是知道哪些资源是首屏的话，那首屏的图片就不要懒加载了。</li>
+</ul>
+</li>
+</ul>
+<h4 id="网络性能优化"><a href="#网络性能优化" class="headerlink" title="网络性能优化"></a>网络性能优化</h4><p>网络层面的优化前端能做的事情不多，主要有以下几个方面:</p>
+<ul>
+<li>dns-prefetch、preconnect</li>
+<li>使用http2</li>
+<li>native容器代理前端请求。由于容器可以做提前建联等优化，所以如果容器能够代理前端的请求，那请求时间也能减少。</li>
+</ul>
+<h3 id="渲染性能"><a href="#渲染性能" class="headerlink" title="渲染性能"></a>渲染性能</h3><h4 id="优化CRP-Critical-Rendering-Path"><a href="#优化CRP-Critical-Rendering-Path" class="headerlink" title="优化CRP(Critical-Rendering-Path)"></a>优化CRP(Critical-Rendering-Path)</h4><p>关键渲染路径:从收到 HTML、CSS 和 JavaScript 字节到对其进行必需的处理，从而将它们转变成渲染的像素这一过程中的一些中间步骤。关于CRP的解释以及优化思路和方法可以参考谷歌官方的博客<a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/" target="_blank" rel="noopener">优化CRP</a>，总的来说就是减少关键资源的数量、关键路径长度、关键字节的数量</p>
+<h4 id="优化数据获取速度"><a href="#优化数据获取速度" class="headerlink" title="优化数据获取速度"></a>优化数据获取速度</h4><p>需要进行前端渲染的页面都是在前端实现（数据+模板）=&gt; dom 这个过程的。由于生成dom已经够快了，并不是瓶颈，所以优化渲染性能需要解决的就是如何更快的获取到数据</p>
+<ul>
+<li>本地硬缓存，这个缓存的粒度可粗可细，可以直接把数据缓存，也可以把渲染后的dom直接缓存了，但这只适用于数据变化不大的页面。</li>
+<li>数据预加载。目前预加载需要容器的配合，通过和容器的约定，在请求页面的时候容器同步请求数据，这样在js执行到获取数据的时候，数据其实已经到容器了。</li>
+</ul>
+<h4 id="交互体验优化"><a href="#交互体验优化" class="headerlink" title="交互体验优化"></a>交互体验优化</h4><ul>
+<li>这个主要是css和dom的渲染速度优化，基本的规则都已经深入人心了，比如利用css3特性提升渲染层、合成层优化、避免reflow|repaint等等</li>
+<li>大量动画的时候注意css的性能，避免使用js动画</li>
+<li>滚动事件，一般是懒加载或者是需要根据滚动进行不同展现的一些需求，一般滚动都要用throttle处理，不然必然会影响滚动的体验，还有就是绑定事件时使用 passive 参数</li>
+</ul>
+<h2 id="性能数据采集"><a href="#性能数据采集" class="headerlink" title="性能数据采集"></a>性能数据采集</h2><p>在进行性能优化之前，必须进行性能数据采集这项工作。这个的重要性不言而喻。性能数据采集主要有以下几个问题需要解答：采集什么？如何采集？采集后如何处理？</p>
+<h3 id="采集指标"><a href="#采集指标" class="headerlink" title="采集指标"></a>采集指标</h3><p>这个问题其实目前并没有完美的解决方案，因为性能是一个感官上的东西，要对他进行量化本来就很难，而且怎么量化的精确、准确就更难了，我所了解的主要有一下几种方案：</p>
+<ul>
+<li>window.performance.timing<br>这个方案最简单、兼容性最好，可以完整的记录整个文档生命周期中的各个时间节点，但是缺陷就是它是描述整个页面的，并不能直接给出比如白屏时间、首屏时间等指标</li>
+<li>fcp\fmp\fci<br>这个是lighthouse的工具使用的一些指标，First Contentful Paint（首次内容渲染）、First Meaningful Paint（首次有效渲染）、First CPU Idle（首次可交互时间）。这些指标是直接面向用户的指标，具体计算方法可以参考<a href="https://developers.google.com/web/fundamentals/performance/user-centric-performance-metrics#first_paint_and_first_contentful_paint" target="_blank" rel="noopener">谷歌官方解释</a></li>
+</ul>
+<h3 id="采集方法"><a href="#采集方法" class="headerlink" title="采集方法"></a>采集方法</h3><p>其实就是如何把采集到的数据上报，有两种方式比较常见：页面关闭时、页面onload后。我的经验是用页面关闭时触发的事件来发送埋点不是非常可靠，比如有的情况是页面不关闭，或者关闭太快js并没有执行，会导致整体的丢包率有点高。所以我采用的方式是onload后触发埋点上报</p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>这一块经验不多，推荐博客<a href="https://zhuanlan.zhihu.com/p/32262716" target="_blank" rel="noopener">把前端监控做到极致</a>。目标就是要实现前端性能监控。那就需要数据的实时处理、实时展现。这样才能实现前端性能优化的闭环，发现问题-&gt;解决问题-&gt;线上监控实时反馈-&gt;继续发现问题-&gt;…</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<li>一直以来web的性能都是一大槽点，也是和native相比最大的劣势。到底web的性能能不能和native接近，甚至超过。之前我一直觉得没可能，因为硬件性能的提升是普惠的，并不是只对web有提升。但是后来看了U4内核研发负责人的<a href="https://mp.weixin.qq.com/s/g1odJQZUgIvk4oJysKPnbw" target="_blank" rel="noopener">分享</a>，感觉还是有那么一点可能的，但是要付出很大的代价，并且肯定是前端、容器、网络、后端一起协同改造优化的结果，只靠前端那点优化手段是不可能的。</li>
+<li>优化来优化去，在现在机器性能普遍提升的情况下，除了对动画性能要求高的各种炫酷页面、电商会场、游戏等等，渲染层面对于普通的页面其实已经没有多大的问题了。最大的问题还是在加载，目前虽然普及了4G，但是网络速度还是堪忧，并且网络链路非常复杂，也不好优化。那杀手锏级别的优化手段是什么？强缓存，无论是SW还是其他技术，就是在端（native、浏览器）直接把你的资源缓存在本地，资源加载时间在几十毫秒内，那页面秒开也就好办多了，但是又同时会引来缓存更新、到达率等等的新问题</li>
+<li>这篇文章是20180118开始写的，今天才写完。。。</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://juejin.im/post/5a966bd16fb9a0635172a50a" target="_blank" rel="noopener">前端性能优化清单</a><br><a href="https://developers.google.com/web/tools/chrome-devtools/rendering-tools/" target="_blank" rel="noopener">chrome文档 分析运行时性能</a><br><a href="https://segmentfault.com/a/1190000008693178" target="_blank" rel="noopener">Web性能优化</a><br><a href="https://developers.google.com/web/tools/lighthouse/" target="_blank" rel="noopener">chrome文档 使用 Lighthouse 审查网络应用</a><br><a href="http://taobaofed.org/blog/2016/04/25/performance-composite/" target="_blank" rel="noopener">淘宝FED Composite优化</a><br><a href="https://www.w3.org/TR/navigation-timing/#sec-window.performance-attribute" target="_blank" rel="noopener">window.performance attribute</a><br><a href="https://developers.google.com/web/fundamentals/performance/user-centric-performance-metrics#tracking_fpfcp" target="_blank" rel="noopener">user-centric-performance-metrics</a><br><a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/" target="_blank" rel="noopener">critical-rendering-path</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/性能/" rel="tag"># 性能</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2018/06/03/2018-06-03-service worker的思考/" rel="next" title="service worker的思考">
+                <i class="fa fa-chevron-left"></i> service worker的思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2018/11/24/2018-11-24-ECMAScript2016规范理解（5）-Object/" rel="prev" title="ECMAScript2016规范理解（5）-Object">
+                ECMAScript2016规范理解（5）-Object <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能"><span class="nav-number">1.</span> <span class="nav-text">性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加载性能"><span class="nav-number">1.1.</span> <span class="nav-text">加载性能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#静态资源加载"><span class="nav-number">1.1.1.</span> <span class="nav-text">静态资源加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网络性能优化"><span class="nav-number">1.1.2.</span> <span class="nav-text">网络性能优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渲染性能"><span class="nav-number">1.2.</span> <span class="nav-text">渲染性能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优化CRP-Critical-Rendering-Path"><span class="nav-number">1.2.1.</span> <span class="nav-text">优化CRP(Critical-Rendering-Path)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化数据获取速度"><span class="nav-number">1.2.2.</span> <span class="nav-text">优化数据获取速度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#交互体验优化"><span class="nav-number">1.2.3.</span> <span class="nav-text">交互体验优化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能数据采集"><span class="nav-number">2.</span> <span class="nav-text">性能数据采集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#采集指标"><span class="nav-number">2.1.</span> <span class="nav-text">采集指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#采集方法"><span class="nav-number">2.2.</span> <span class="nav-text">采集方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据处理"><span class="nav-number">2.3.</span> <span class="nav-text">数据处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">3.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

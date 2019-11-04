@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="jquery," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第一章 精华JavaScript中非常糟糕的一点就是依赖全局变量来连接，所有单元的顶级变量都最终挂载global这个全局变量中。 第二章 语法空白符通常没有意义，标识符必须以字母开头，同时不能使用保留字，对象字面量中的属性名也不能出现保留字">
+<meta name="keywords" content="jquery">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript语言精粹笔记">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2015/09/03/2015-09-04-javascript语言精粹笔记/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="第一章 精华JavaScript中非常糟糕的一点就是依赖全局变量来连接，所有单元的顶级变量都最终挂载global这个全局变量中。 第二章 语法空白符通常没有意义，标识符必须以字母开头，同时不能使用保留字，对象字面量中的属性名也不能出现保留字">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-19T16:17:27.083Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript语言精粹笔记">
+<meta name="twitter:description" content="第一章 精华JavaScript中非常糟糕的一点就是依赖全局变量来连接，所有单元的顶级变量都最终挂载global这个全局变量中。 第二章 语法空白符通常没有意义，标识符必须以字母开头，同时不能使用保留字，对象字面量中的属性名也不能出现保留字">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2015/09/03/2015-09-04-javascript语言精粹笔记/"/>
+
+
+
+
+
+  <title>javascript语言精粹笔记 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2015/09/03/2015-09-04-javascript语言精粹笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">javascript语言精粹笔记</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-09-03T00:00:00+08:00">
+                2015-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第一章-精华"><a href="#第一章-精华" class="headerlink" title="第一章 精华"></a>第一章 精华</h1><p>JavaScript中非常糟糕的一点就是依赖全局变量来连接，所有单元的顶级变量都最终挂载global这个全局变量中。</p>
+<h1 id="第二章-语法"><a href="#第二章-语法" class="headerlink" title="第二章 语法"></a>第二章 语法</h1><p>空白符通常没有意义，标识符必须以字母开头，同时不能使用保留字，对象字面量中的属性名也不能出现保留字<br><a id="more"></a></p>
+<h1 id="第三章-对象"><a href="#第三章-对象" class="headerlink" title="第三章 对象"></a>第三章 对象</h1><ol>
+<li>属性名如果是合法的标识符不需要用引号括住，不合法的“first-name”就需要。</li>
+<li>从undefined的成员属性中取值会导致TypeError异常，避免出现这样的情况，可以用&amp;&amp;符号来避免。比如a.b&amp;&amp;a.b.name，如果a.b是undefined，那自然会返回undefined</li>
+<li>用delete删除对象的属性，可能会让来自原型链中的属性透现出来。</li>
+</ol>
+<h1 id="第四章-函数"><a href="#第四章-函数" class="headerlink" title="第四章 函数"></a>第四章 函数</h1><ol>
+<li>函数对象的原型是Function.prototype。该原型对象本身的原型是Object.prototype</li>
+<li>如果函数调用时在前面加了new，但是返回值不是一个对象，则会返回this，即改函数对象。 </li>
+</ol>
+<h1 id="第五章-继承"><a href="#第五章-继承" class="headerlink" title="第五章 继承"></a>第五章 继承</h1><ol>
+<li>new 运算符执行过程大概是： <figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="literal">that</span>=Object.create(<span class="keyword">this</span>.prototype);</span><br><span class="line"><span class="keyword">var</span> other=<span class="keyword">this</span>.apply(<span class="literal">that</span>,arguments);</span><br><span class="line"><span class="keyword">return</span> (<span class="keyword">typeof</span> other===<span class="string">'object'</span>&amp;&amp;other)||<span class="literal">that</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="第六章-数组"><a href="#第六章-数组" class="headerlink" title="第六章 数组"></a>第六章 数组</h1><ol>
+<li>数组可以包含任意混合类型的值。</li>
+<li>length属性值是这个数组最大整数属性名加上1，并不等于数组里的元素的个数。设置更大的length不会给数组分配更多的空间，但把length设小，将会把所有大于等于新length的属性删除。</li>
+<li>[]后置下标运算符把它所含的表达式转换成一个字符串。如果该表达式有toString方法，就使用该方法，字符串将被用作属性名，不会改变length，如果字符串是一个大于等于当前length，小于2^32-1的正整数，那length会被设置为新的下标加1。</li>
+</ol>
+<h1 id="第七章-正则表达式"><a href="#第七章-正则表达式" class="headerlink" title="第七章 正则表达式"></a>第七章 正则表达式</h1><ol>
+<li><p>匹配一个url的正则表达式</p>
+ <figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/^<span class="comment">(?:([A-Za-z]+)</span>:)?<span class="comment">(\/&#123;0,3&#125;)</span><span class="comment">([0-9.\-A-Za-z]+)</span><span class="comment">(?::(\d+)</span>)?<span class="comment">(?:\/([^?#]*)</span>)?<span class="comment">(?:\?([^#]*)</span>)?<span class="comment">(?:#(.*)</span>)?$/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>\1是指向分组1所捕获到的文本的一个引用，它可以在正则表达式中引用，用来匹配后续的文本。</p>
+</li>
+<li>正则表达式分组有四种，捕获型()、非捕获型(?:)、向前正向匹配(?=)、向前负向匹配(?!)。</li>
+</ol>
+<h1 id="第八章-方法"><a href="#第八章-方法" class="headerlink" title="第八章 方法"></a>第八章 方法</h1><ol>
+<li>regexp.exec是最强大的也是最慢的方法，如果是全局查找的话，regexp.lastIndex将被设置为该匹配后的第一个字符的位置，不成功会重置为0，如果是用循环调用exec去查询一个字符串，如果提前退出了这个循环，再次进入的时候必须把regexp.lastIndex重置为0，因为^因子仅匹配lastIndex为0的情况。</li>
+<li>regexp.test不要使用g标示</li>
+<li>string.match(regexp)如果regexp带有g标识，那么它生成一个包含所有匹配的数组。</li>
+<li>string.replace(searchValue,replaceValue)如果第一个参数是一个字符串，那只会在第一次出现的地方被替换。第一个参数是regexp，并且带有g标识，就将会替换所有匹配。如果replaceValue如果是一个函数，那每遇到一次匹配，函数就会被调用一次，函数返回的字符串会被用作替换文本。</li>
+<li>string.search方法和indexOf方法类似，接受一个正则表达式对象作为参数，返回第一个匹配首字符位置，没有则返回-1，且忽略g标示。</li>
+<li><p>parseInt()总是要带上进制的参数，因为parseInt(“08”)===0,因为这里它识别“08”按照八进制进行转换。正确的是parseInt(“08”,10)。在遇到非数字时会停止解析，所以parseInt(“16”)==parseInt(“16yd”);<br>7.</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> <span class="literal">NaN</span>===<span class="string">"number"</span>  <span class="comment">//true   </span></span><br><span class="line"><span class="literal">NaN</span>===<span class="literal">NaN</span>  <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>js中为false的值有0 NaN “” false null undefined，undefined和NaN的值是可以被改变的。</p>
+ <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">''</span>==<span class="string">'0'</span> <span class="comment">//false</span></span><br><span class="line"><span class="number">0</span>==<span class="string">''</span>   <span class="comment">//true</span></span><br><span class="line"><span class="number">0</span>==<span class="string">'0'</span>  <span class="comment">//true</span></span><br><span class="line"><span class="literal">false</span>==<span class="string">'false'</span> <span class="comment">//false</span></span><br><span class="line"><span class="literal">false</span>==<span class="string">'0'</span>     <span class="comment">//true</span></span><br><span class="line"><span class="literal">false</span>==<span class="literal">undefined</span>  <span class="comment">//false</span></span><br><span class="line"><span class="literal">false</span>=<span class="literal">null</span>        <span class="comment">//false</span></span><br><span class="line"><span class="literal">null</span>==<span class="literal">undefined</span>   <span class="comment">//true</span></span><br><span class="line"><span class="string">' \t\r\n '</span>==<span class="number">0</span>     <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/jquery/" rel="tag"># jquery</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/07/19/2015-06-23-数据可视化的一些资源整理/" rel="next" title="数据可视化的一些资源整理">
+                <i class="fa fa-chevron-left"></i> 数据可视化的一些资源整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/09/07/2015-09-07-javascript高级程序设计-笔记/" rel="prev" title="javascript高级程序设计-笔记">
+                javascript高级程序设计-笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一章-精华"><span class="nav-number">1.</span> <span class="nav-text">第一章 精华</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章-语法"><span class="nav-number">2.</span> <span class="nav-text">第二章 语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第三章-对象"><span class="nav-number">3.</span> <span class="nav-text">第三章 对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第四章-函数"><span class="nav-number">4.</span> <span class="nav-text">第四章 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第五章-继承"><span class="nav-number">5.</span> <span class="nav-text">第五章 继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第六章-数组"><span class="nav-number">6.</span> <span class="nav-text">第六章 数组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第七章-正则表达式"><span class="nav-number">7.</span> <span class="nav-text">第七章 正则表达式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第八章-方法"><span class="nav-number">8.</span> <span class="nav-text">第八章 方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="JavaScript,ECMAScript规范," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="new 的执行过程是非常常见的一个问题，《JavaScript高级程序设计》中也讲了这个问题。现在有个问题：new一个bind之后的函数，结果是怎样的？本文尝试从规范的角度来解答这个问题">
+<meta name="keywords" content="JavaScript,ECMAScript规范">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript2016规范理解（8）-new表达式的执行过程">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="new 的执行过程是非常常见的一个问题，《JavaScript高级程序设计》中也讲了这个问题。现在有个问题：new一个bind之后的函数，结果是怎样的？本文尝试从规范的角度来解答这个问题">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/new.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/construct.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/fc.png">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/bindc.png">
+<meta property="og:updated_time" content="2019-04-28T18:08:56.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript2016规范理解（8）-new表达式的执行过程">
+<meta name="twitter:description" content="new 的执行过程是非常常见的一个问题，《JavaScript高级程序设计》中也讲了这个问题。现在有个问题：new一个bind之后的函数，结果是怎样的？本文尝试从规范的角度来解答这个问题">
+<meta name="twitter:image" content="http://ldllidonglin.github.io/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/new.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/"/>
+
+
+
+
+
+  <title>ECMAScript2016规范理解（8）-new表达式的执行过程 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2019/04/26/2019-04-26-ECMAScript2016规范理解（8）-new表达式执行过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ECMAScript2016规范理解（8）-new表达式的执行过程</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-26T00:00:00+08:00">
+                2019-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/ECMAScript规范/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript规范</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>new 的执行过程是非常常见的一个问题，《JavaScript高级程序设计》中也讲了这个问题。现在有个问题：new一个bind之后的函数，结果是怎样的？本文尝试从规范的角度来解答这个问题<br><a id="more"></a></p>
+<h2 id="new-表达式"><a href="#new-表达式" class="headerlink" title="new 表达式"></a>new 表达式</h2><h3 id="《JavaScript高级程序设计》中的说明"><a href="#《JavaScript高级程序设计》中的说明" class="headerlink" title="《JavaScript高级程序设计》中的说明"></a>《JavaScript高级程序设计》中的说明</h3><ul>
+<li>创建一个新对象</li>
+<li>将构造函数的作用域赋给新对象（因此this就指向了这个新对象）</li>
+<li>执行构造函数中的代码（为这个新对象添加属性）</li>
+<li>返回新对象</li>
+</ul>
+<h3 id="看看规范中是怎么讲的"><a href="#看看规范中是怎么讲的" class="headerlink" title="看看规范中是怎么讲的"></a>看看规范中是怎么讲的</h3><p><img src="./new.png" alt="new"><br>可以看到最终是执行了Construct<br><img src="./construct.png" alt="construct"><br>然后又去执行了Function对象的内置[[Construct]]方法<br><img src="./fc.png" alt="fc"><br>简单翻译下[[Construct]]函数的执行过程</p>
+<ol>
+<li>如果ConstructorKind记录为kind为base，那么this值为以 F.prototype || “%ObjectPrototype%”为原型创建的一个空对象，记为thisArg</li>
+<li>创建新的函数执行上下文3，并且推入执行上下文堆栈，成为当前执行上下文</li>
+<li>如果kind是base，给当前的执行上下文中环境记录项envRec中的this值设置为thisArg</li>
+<li>执行函数体，结果为result（如果函数体中有this.x类似这样的赋值，那就能把值赋值到thisArg中了）</li>
+<li>如果函数有return，并且返回的是object，那么直接返回函数体执行的结果</li>
+<li>如果函数有return，返回的不是object，但是kind是base， 那么直接返回之前创建的thisArg</li>
+<li>如果函数有return，返回的不是object也不是undefined，但是kind不是base，那么就抛出异常（kind一共只有两种值，正常函数是kind，使用了class继承预发的是derived，也就是说在使用了class继承的类的构造函数中，如果有return语句，必须return object，否则会报错）</li>
+<li>如果函数没有return，那就看函数的执行结果类型如果是 break continue throw，一般都会报错</li>
+<li>函数没有return，执行结果是正常的，那么就返回之前执行上线文中的环境记录项envRec的this值，其实就是thisArg</li>
+</ol>
+<p>规范是不是很繁琐？因为它必须严谨，必须使用规范中的文法来描述整个执行过程，其实和高级程序设计中描述的基本一致，除了没有说明es6新增的class继承语法的边界问题。如果是考虑普通函数的话，用代码标识如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">newFn</span>(<span class="params">constructor</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">const</span> obj = <span class="built_in">Object</span>.create(<span class="keyword">constructor</span>.prototype)</span><br><span class="line">  const result = <span class="keyword">constructor</span>.apply(obj, arguments.slice(1))</span><br><span class="line">  return (typeof result === 'object' &amp;&amp; result != null) ? result : obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="super-arguments"><a href="#super-arguments" class="headerlink" title="super(arguments)"></a>super(arguments)</h2><p>上面提到[[Construct]]在执行的时候，会判断[[ConstructorKind]]这个属性。而这个属性的定义在<a href="https://tc39.github.io/ecma262/#sec-ecmascript-function-objects" target="_blank" rel="noopener">9.2ECMAScript Function Objects</a>。其中规定了只有两种值，分别是kind和derived。全局搜索就能发现在普通函数定义时，会把[[ConstructorKind]]设置为base，在使用了extends实现继承的class定义时，会被设置为derived。 所以上面的执行过程中，如果是derived有两个特殊情况：</p>
+<ol>
+<li>不会默认用当前函数的原型去创建一个对象作为this绑定在当前执行上下文</li>
+<li>[[Construct]]函数要么不返回，要么返回对象或者undefined，其余值都会报错<br>这也就是为何要规定，如果声明了constructor函数就必须显示的调用super来设置当前执行环境中环境记录项的this值。在<a href="http://localhost:4000/blog/2019/04/09/2019-04-09-ECMAScript2016%E8%A7%84%E8%8C%83%E7%90%86%E8%A7%A3%EF%BC%886%EF%BC%89-super/#more" target="_blank" rel="noopener">ECMAScript2016规范理解（6）-super</a>中有说明super(arguments)的执行过程。其最终也是调用了Construct(func, argList, newTarget)。并且把result设置为当前含有this的环境记录项中的的this值（有点绕）。这就有问题了，调用super时，也就是调用父类的构造函数，父类的构造函数中往往有this.x等这样的赋值操作，为何this.x最终是赋值到了子类的对象上，而不是父类构造出来的对象呢？用如下示例代码来解释：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">super</span>()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> A()</span><br><span class="line"><span class="keyword">var</span> b = <span class="keyword">new</span> B()</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>注意：<ul>
+<li>在调用Construct时的 newTarget 参数是通过 GetNewTarget()获得的，而GetNewTarget是获取GetThisEnvironment 的 [[NewTarget]] ，根据Function Environment Records的说明，当环境记录项是由[[Construct]]执行时创建的，那么[[NewTarget]] 就是正在执行的[[Construct]]函数的newTarget参数。也就是说，上面示例代码中的 b函数本身。</li>
+<li>所以最终去执行通过super找到父类的构造函数，然后去执行父类构造函数a的内置[[Construct]] 方法时，newTarge是子类函数b。所以创建出来的thisArg是子类函数b为原型创建的空对象，这就解释了为何通过super调用父类的构造函数创建出来的对象，其原型反而是子类的prototype</li>
+</ul>
+</li>
+</ul>
+<h2 id="当new操作符对应的是bind后的函数时"><a href="#当new操作符对应的是bind后的函数时" class="headerlink" title="当new操作符对应的是bind后的函数时"></a>当new操作符对应的是bind后的函数时</h2><p>在规范中，bind之后的那个函数，是被定义为Bound Function Exotic Objects。其Construct方法和前文说的不一样。并且它还有三个内置属性[[BoundTargetFunction]]    [[BoundThis]]    [[BoundArguments]]，其实从名字基本能猜出其意思，正是由于[[BoundThis]]的存在，bind之后的函数，使用call，apply都是没法改变其执行是的this值的，接下来我们看看规范中是怎么描述[[Construct]]方法的<br><img src="./bindc.png" alt="bindc"></p>
+<ul>
+<li>注意<ul>
+<li>执行new表达式的时候，执行这句Construct(constructor, argList)，是没有带第三个参数newTarget的。Construct内部会把newTarget的值设置为F，然后再去调用 F.<a href="argumentsList, newTarget">[Construct]</a>，F是参数constructor</li>
+<li>在Bound Function 的[[Construct]]中，执行的Construct(target, args, newTarget)，其实target为bind前的源函数[[BoundTargetFunction]]，newTarget由于和F是相等的，所以newTarge也为[[BoundTargetFunction]]。</li>
+<li>所有最终，Bound Function 的[[Construct]]，又去调用了[[BoundTargetFunction]]的内置属性，区别是args是合并了[[BoundArguments]]和new时传入的参数</li>
+</ul>
+</li>
+</ul>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(a, b)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> b = a.bind(obj, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">new</span> b(<span class="number">2</span>)</span><br><span class="line"><span class="comment">// 1 2</span></span><br></pre></td></tr></table></figure>
+<p>最终打印出来的是 1 2</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/blog/tags/ECMAScript规范/" rel="tag"># ECMAScript规范</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2019/04/22/2019-04-22-HTTP Cache/" rel="next" title="HTTP Cache">
+                <i class="fa fa-chevron-left"></i> HTTP Cache
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2019/07/03/2019-07-03-ECMAScript规范的最新动向/" rel="prev" title="ECMAScript规范的最新动向">
+                ECMAScript规范的最新动向 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#new-表达式"><span class="nav-number">1.</span> <span class="nav-text">new 表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#《JavaScript高级程序设计》中的说明"><span class="nav-number">1.1.</span> <span class="nav-text">《JavaScript高级程序设计》中的说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#看看规范中是怎么讲的"><span class="nav-number">1.2.</span> <span class="nav-text">看看规范中是怎么讲的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#super-arguments"><span class="nav-number">2.</span> <span class="nav-text">super(arguments)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当new操作符对应的是bind后的函数时"><span class="nav-number">3.</span> <span class="nav-text">当new操作符对应的是bind后的函数时</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">3.1.</span> <span class="nav-text">验证</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

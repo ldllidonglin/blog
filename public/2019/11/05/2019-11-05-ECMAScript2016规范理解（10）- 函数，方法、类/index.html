@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="JavaScript,ECMAScript规范," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="函数、方法、类在规范中的定义理解">
+<meta name="keywords" content="JavaScript,ECMAScript规范">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript2016规范理解（10）- 函数，方法、类">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2019/11/05/2019-11-05-ECMAScript2016规范理解（10）- 函数，方法、类/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="函数、方法、类在规范中的定义理解">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-04T17:34:38.971Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript2016规范理解（10）- 函数，方法、类">
+<meta name="twitter:description" content="函数、方法、类在规范中的定义理解">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2019/11/05/2019-11-05-ECMAScript2016规范理解（10）- 函数，方法、类/"/>
+
+
+
+
+
+  <title>ECMAScript2016规范理解（10）- 函数，方法、类 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2019/11/05/2019-11-05-ECMAScript2016规范理解（10）- 函数，方法、类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ECMAScript2016规范理解（10）- 函数，方法、类</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-05T00:00:00+08:00">
+                2019-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/ECMAScript规范/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript规范</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>函数、方法、类在规范中的定义理解<br><a id="more"></a></p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>目前在规范中规定一共有6种函数：</p>
+<ul>
+<li><a href="https://tc39.es/ecma262/#sec-function-definitions" target="_blank" rel="noopener">普通函数</a></li>
+<li><a href="https://tc39.es/ecma262/#sec-arrow-function-definitions" target="_blank" rel="noopener">箭头函数</a></li>
+<li><a href="https://tc39.es/ecma262/#sec-async-function-definitions" target="_blank" rel="noopener">Aysnc Function</a></li>
+<li><a href="https://tc39.es/ecma262/#sec-async-arrow-function-definitions" target="_blank" rel="noopener">Async Arrow Function</a></li>
+<li><a href="https://tc39.es/ecma262/#sec-generator-function-definitions" target="_blank" rel="noopener">Generator Function</a></li>
+<li><a href="https://tc39.es/ecma262/#sec-async-generator-function-definitions" target="_blank" rel="noopener">Async Generator Function</a></li>
+</ul>
+<h3 id="创建函数"><a href="#创建函数" class="headerlink" title="创建函数"></a>创建函数</h3><ul>
+<li>创建函数一共有三种方式：函数声明、函数表达式、Function构造函数</li>
+<li><a href="https://tc39.es/ecma262/#sec-function-definitions" target="_blank" rel="noopener">函数声明</a>和<a href="https://tc39.es/ecma262/#prod-FunctionExpression" target="_blank" rel="noopener">函数表达式</a>在语法上的区别就是，函数表达式中的函数名是可选的。在实际使用中需要注意使用函数表达式创建的函数不会有”变量提升“，即必须在使用前声明</li>
+<li>函数声明提升的几种情况:函数表达式,块级函数</li>
+</ul>
+<h4 id="ECMAScript中规定的创建函数的算法"><a href="#ECMAScript中规定的创建函数的算法" class="headerlink" title="ECMAScript中规定的创建函数的算法"></a>ECMAScript中规定的创建函数的算法</h4><ul>
+<li><a href="https://tc39.es/ecma262/#sec-function-definitions-runtime-semantics-evaluation" target="_blank" rel="noopener">普通函数</a><ul>
+<li>FunctionCreate(Normal, FormalParameters, FunctionBody, funcEnv).</li>
+<li>MakeConstructor(closure).</li>
+</ul>
+</li>
+<li><a href="https://tc39.es/ecma262/#sec-arrow-function-definitions-runtime-semantics-evaluation" target="_blank" rel="noopener">箭头函数</a><ul>
+<li>FunctionCreate(Arrow, FormalParameters, FunctionBody, funcEnv).</li>
+</ul>
+</li>
+<li>都是通过 FunctionCreate 过程实现函数创建，但是箭头函数不会执行MakeConstructor，所以箭头函数不能用作构造函数,并且prototype属性是在MakeConstructor里定义的，所以箭头函数也没有prototype属性</li>
+</ul>
+<h5 id="FunctionCreate方法详细说明"><a href="#FunctionCreate方法详细说明" class="headerlink" title="FunctionCreate方法详细说明"></a>FunctionCreate方法详细说明</h5><ul>
+<li>FunctionAllocate(prototype, functionkind)<ul>
+<li>创建一个ecma函数对象F，同时F.[[FunctionKind]]为functionKind。F.[[Prototype]] to functionPrototype.</li>
+<li>arrow function 不会初始化F.[[Construct]] 属性</li>
+<li>返回 F</li>
+</ul>
+</li>
+<li>FunctionInitialize<ul>
+<li>箭头函数的 F.[[ThisMode]] 设置为 lexical.普通函数的是 F.[[ThisMode]] to global</li>
+</ul>
+</li>
+</ul>
+<h3 id="执行函数"><a href="#执行函数" class="headerlink" title="执行函数"></a>执行函数</h3><ul>
+<li>执行函数即函数调用，从预发上来说是执行一个<a href="https://tc39.es/ecma262/#prod-CallExpression" target="_blank" rel="noopener">CallExpression</a>, 其具体执行过程在<a href="https://tc39.es/ecma262/#sec-function-calls" target="_blank" rel="noopener">12.3.4 Function Calls</a>, 简化下就是：<ul>
+<li>先确定this值，如a.b()这种形式，this为a</li>
+<li>调用F.<a href="thisValue, args">Call</a></li>
+</ul>
+</li>
+<li>执行函数最终都是执行F.[Call]方法。</li>
+<li>F.[[Call]]执行过程中会执行 OrdinaryCallBindThis ，它的作用就是给当前执行环境绑定this的值，这样在执行函数体的时候，知道到this值，就知道this的值是什么了。在OrdinaryCallBindThis执行的时候，如果[[ThisMode]]为 lexical。则直接return，其他情况会envRec.BindThisValue(thisValue).即给当前执行环境中绑定传递过来的this的值。所以箭头函数内的词法环境记录项里是没有this的。所以只能往上找，即当时定义的词法环境记录项。而且bind、call、apply最后都要调用F.[[Call]]，所以对箭头函数都无法生效</li>
+</ul>
+<h2 id="方法（Method）"><a href="#方法（Method）" class="headerlink" title="方法（Method）"></a>方法（Method）</h2><h3 id="方法的定义"><a href="#方法的定义" class="headerlink" title="方法的定义"></a>方法的定义</h3><ul>
+<li>从<a href="https://tc39.es/ecma262/#sec-method-definitions" target="_blank" rel="noopener">规范定义</a>中看，方法一种有6种：普通方法、Generator方法，Async方法，AsyncGenerator方法，set方法，get方法</li>
+<li>DefineMethod执行过程（必选参数object，prototype为可选参数）<ul>
+<li>FunctionCreate(kind, UniqueFormalParameters, FunctionBody, scope, prototype)。创建了一个函数，并且F.[[Prototype]] 为prototype参数</li>
+<li>MakeMethod(closure, object)，就是把closure的[[HomeObject]]内置属性设置为object</li>
+</ul>
+</li>
+<li>FunctionCreate执行时，kind是Method，同样的没有执行MakeConstructor，所以也不能当做构造函数使用</li>
+</ul>
+<h3 id="方法的执行"><a href="#方法的执行" class="headerlink" title="方法的执行"></a>方法的执行</h3><ul>
+<li>方法执行代码例如<code>a.b()</code>是一个左值表达式，最终走的还是函数调用的逻辑</li>
+</ul>
+<h2 id="类（Class）"><a href="#类（Class）" class="headerlink" title="类（Class）"></a>类（Class）</h2><ul>
+<li><a href="https://tc39.es/ecma262/#sec-class-definitions" target="_blank" rel="noopener">14.6 Class Definitions</a><ul>
+<li>给class name在当前词法环境记录项中绑定一个不可变的名字</li>
+<li>如果有继承，找到继承的class p，则以p.prototype为原型创建对象proto，以 p 为constructorParent</li>
+<li>如果不是继承，则以Object.prototype为原型创建对象proto，以Function.prototype为constructorParent</li>
+<li>对constructor以proto和constructorParent为参数执行 DefineMethod 得到函数F，并且F.[[Prototype]] constructorParent</li>
+<li>对F执行MakeConstructor(F, false, proto)。得到 F.prototype为proto</li>
+<li>给proto添加属性constructor为F</li>
+<li>处理classbody代码，如果是static方法，全部以F为参数执行 DefineMethod，不是的话已proto为参数执行 DefineMethod</li>
+<li>返回F</li>
+</ul>
+</li>
+<li>如果是继承的情况，为何要让p成为F的[[prototype]]属性</li>
+<li>看示例<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">a</span> </span>&#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">b</span> <span class="keyword">extends</span> <span class="title">a</span></span>&#123;&#125; <span class="comment">// 这句会导致 b.__proto__ === a, b.prototype.__proto__ === a.prototype</span></span><br><span class="line"><span class="keyword">const</span> c = <span class="keyword">new</span> a()</span><br><span class="line">c <span class="keyword">instanceof</span> b <span class="comment">// true c.__proto__ === b.prototype</span></span><br><span class="line">c <span class="keyword">instanceof</span> a <span class="comment">// true  c.__proto__.__proto__ === a.prototype</span></span><br><span class="line">b <span class="keyword">instanceof</span> <span class="built_in">Function</span> <span class="comment">// true b.__proto__ === a, a.__proto__ === Function.prototype</span></span><br><span class="line"><span class="comment">// 因为 c.__proto__ === b.prototype === Object.create(a.prototype)</span></span><br><span class="line"><span class="comment">// 所以 c.__proto__.__proto__ === b.prototype.__proto__ === a.prototype</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/blog/tags/ECMAScript规范/" rel="tag"># ECMAScript规范</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2019/11/03/2019-11-03-ECMAScript2016规范理解（9）- 箭头函数/" rel="next" title="ECMAScript2016规范理解（9）- 箭头函数">
+                <i class="fa fa-chevron-left"></i> ECMAScript2016规范理解（9）- 箭头函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">1.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建函数"><span class="nav-number">1.1.</span> <span class="nav-text">创建函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ECMAScript中规定的创建函数的算法"><span class="nav-number">1.1.1.</span> <span class="nav-text">ECMAScript中规定的创建函数的算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#FunctionCreate方法详细说明"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">FunctionCreate方法详细说明</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行函数"><span class="nav-number">1.2.</span> <span class="nav-text">执行函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法（Method）"><span class="nav-number">2.</span> <span class="nav-text">方法（Method）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法的定义"><span class="nav-number">2.1.</span> <span class="nav-text">方法的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法的执行"><span class="nav-number">2.2.</span> <span class="nav-text">方法的执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类（Class）"><span class="nav-number">3.</span> <span class="nav-text">类（Class）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

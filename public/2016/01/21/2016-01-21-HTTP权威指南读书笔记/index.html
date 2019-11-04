@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="笔记,HTTP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第一部分 HTTP:Web的基础第一章 HTTP概述">
+<meta name="keywords" content="笔记,HTTP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP权威指南读书笔记">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2016/01/21/2016-01-21-HTTP权威指南读书笔记/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="第一部分 HTTP:Web的基础第一章 HTTP概述">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-19T16:17:27.091Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP权威指南读书笔记">
+<meta name="twitter:description" content="第一部分 HTTP:Web的基础第一章 HTTP概述">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2016/01/21/2016-01-21-HTTP权威指南读书笔记/"/>
+
+
+
+
+
+  <title>HTTP权威指南读书笔记 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2016/01/21/2016-01-21-HTTP权威指南读书笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">HTTP权威指南读书笔记</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-21T00:00:00+08:00">
+                2016-01-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第一部分-HTTP-Web的基础"><a href="#第一部分-HTTP-Web的基础" class="headerlink" title="第一部分 HTTP:Web的基础"></a>第一部分 HTTP:Web的基础</h1><h2 id="第一章-HTTP概述"><a href="#第一章-HTTP概述" class="headerlink" title="第一章 HTTP概述"></a>第一章 HTTP概述</h2><a id="more"></a>
+<ol>
+<li>HTTP是应用层协议，建立在TCP/IP之上，Web服务器会为所有HTTP对象数据附加一个MIME 类型，MIME 类型是一种文本标记，表示一种主要的对象类型和一个特定的子类型，中间由一条斜杠来分隔，比如text/html;image/jpeg。</li>
+<li><p>HTTP报文是由一行一行的简单字符串组成的，都是纯文本，主要包括三个部分，</p>
+<ul>
+<li>起始行，报文的第一行就是起始行，在请求报文中用来说明要做些什么，在响应报文中说明出现了什么情况。</li>
+<li>首部字段，起始行后面有零个或多个首部字段。每个首部字段都包含一个名字和一个值， 为了便于解析， 两者之间用冒号（:）来分隔。首部以一个空行结束。添加一个首部字段和添加新行一样简单</li>
+<li><p>主体，其中包含了所有类型的数据，请求报文是要发送给web服务器的内容，响应报文是要发送给客户端的内容</p>
+<p>请求报文范例</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/mumue/archive/2012/04/23/2467072.html</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: www.cnblogs.com</span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"><span class="attribute">Cache-Control</span>: max-age=0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span>: 1</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36</span><br><span class="line"><span class="attribute">Referer</span>: https://www.google.com.hk/</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate, sdch</span><br><span class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,en;q=0.6</span><br><span class="line"><span class="attribute">Cookie</span>: CNZZDATA1255778100=388437504-1442227353-null%7C1442227353; _ga=GA1.2.1845097067.1442111906; _gat=1</span><br><span class="line"><span class="attribute">If-Modified-Since</span>: Tue, 15 Sep 2015 07:16:13 GMT</span><br></pre></td></tr></table></figure>
+<p>响应报文范例</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="symbol">Date:</span> Tue, <span class="number">15</span> Sep <span class="number">2015</span> <span class="number">07</span>:<span class="number">19</span>:<span class="number">07</span> GMT</span><br><span class="line">Content-Type: text/html; charset=utf<span class="number">-8</span></span><br><span class="line"><span class="symbol">Connection:</span> keep-alive</span><br><span class="line"><span class="symbol">Vary:</span> Accept-Encoding</span><br><span class="line">Cache-Control: private, max-age=<span class="number">10</span></span><br><span class="line"><span class="symbol">Expires:</span> Tue, <span class="number">15</span> Sep <span class="number">2015</span> <span class="number">07</span>:<span class="number">19</span>:<span class="number">09</span> GMT</span><br><span class="line">Last-Modified: Tue, <span class="number">15</span> Sep <span class="number">2015</span> <span class="number">07</span>:<span class="number">18</span>:<span class="number">59</span> GMT</span><br><span class="line">X-UA-Compatible: IE=<span class="number">10</span></span><br><span class="line">Content-Length: <span class="number">34031</span></span><br><span class="line"><span class="params">&lt;html&gt;</span></span><br><span class="line"><span class="params">&lt;head&gt;</span><span class="params">&lt;/head&gt;</span></span><br><span class="line"><span class="params">&lt;body&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="params">&lt;/body&gt;</span></span><br><span class="line"><span class="params">&lt;/html&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>目前使用的HTTP协议版本是1.1</p>
+</li>
+</ol>
+<h2 id="第二章-URL与资源"><a href="#第二章-URL与资源" class="headerlink" title="第二章 URL与资源"></a>第二章 URL与资源</h2><ol>
+<li>URL的语法基本是这样：<scheme>://<user>:<password>@<host>:<port>/<path></path>;<params>?<query>#<frag>。但没有哪个URL是包含所有组建的。</frag></query></params></port></host></password></user></scheme></li>
+<li>由于URL中只能使用英文字母和阿拉伯数字和某些符号，中文等符号是不能使用的，所以就会遇到编码的问题，一般是%+某种方式编码后的结果，比如空格的ASCII码值是20 编码后就是%20。具体的编码方式和浏览器及操作系统本地环境有关。参考文章：<a href="http://www.ruanyifeng.com/blog/2010/02/url_encoding.html" target="_blank" rel="noopener">阮一峰–关于URL编码</a></li>
+</ol>
+<h2 id="第三章-HTTP报文"><a href="#第三章-HTTP报文" class="headerlink" title="第三章 HTTP报文"></a>第三章 HTTP报文</h2><ol>
+<li>报文的起始行和首部是由行分割的ASCII文本，每行都以一个由两个字符（回车符和换行符）组成的行终止序列作为结束。主体是一个可选的数据块，可以包含文本或二进制数据，也可以是空。</li>
+<li>状态码（<a href="http://www.daqianduan.com/4280.html" target="_blank" rel="noopener">参考文章</a>）<ul>
+<li>100~199 信息性状态码</li>
+<li>200~299 成功状态码</li>
+<li>300~399 重定向状态码 301永久重定向 304 Not MOdified</li>
+<li>400~499 客户端错误状态码</li>
+<li>500~599 服务器错误状体码</li>
+</ul>
+</li>
+<li>303 307是在HTTP1.1才有的，主要是为了细分302，区分POST请求时如何重定向。在HTTP1.1中，302其实是可以删除的，但是为了兼容HTTP1.0，而且很多服务器对重定向序列的返回码使用并不严格，302还是在大量使用。<ul>
+<li>303是返回GET请求的重定向，即重定向的url是GET方式，可以意淫为之前的POST过来的数据已经处理，只需重新请求这个重定向后的GET请求即可。</li>
+<li>307 则是由客户端来决定是发送GET还是POST请求。</li>
+<li><a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html" target="_blank" rel="noopener">RFC文档-Status Code Definitions</a></li>
+<li><a href="http://www.cnblogs.com/cswuyg/p/3871976.html" target="_blank" rel="noopener">HTTP状态码302、303和307的故事</a></li>
+</ul>
+</li>
+</ol>
+<h2 id="第四章-连接管理"><a href="#第四章-连接管理" class="headerlink" title="第四章 连接管理"></a>第四章 连接管理</h2><ol>
+<li>TCP的数据是通过名为IP分组（ 或IP数据报）的小数据块来发送的。</li>
+<li>Connection字段可以有三种意义：<ul>
+<li>其他字段名(表明这些字段将不会被转发)</li>
+<li>关键字(HTTP1.1中只定义了Keep-Alive，用于持久连接，HTTP1.1是默认使用这个参数的，除非主动设为close。如果有这个参数，一般会有Keep-Alive: max=5, timeout=120)</li>
+<li>Close(传输完成即关闭连接)</li>
+</ul>
+</li>
+<li>只有当连接上所有的报文都有正确的、 自定义报文长度时——也就是说， 实体主体部分<br>的长度都和相应的 Content-Length 一致， 或者是用分块传输编码方式编码的——连接<br>才能持久保持。</li>
+</ol>
+<h1 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h1><h2 id="第五章-Web服务器"><a href="#第五章-Web服务器" class="headerlink" title="第五章 Web服务器"></a>第五章 Web服务器</h2><p>解析请求报文时，首先解析请求行，获取请求方法、指定的资源标识符以及版本号，然后读取报文首部，如果有主体的话，读取请求主体</p>
+<h2 id="第六章-代理"><a href="#第六章-代理" class="headerlink" title="第六章 代理"></a>第六章 代理</h2><ol>
+<li>代理的主要作用：<ul>
+<li>内容访问控制</li>
+<li>集中统一式的安全防火墙</li>
+<li>Web缓存</li>
+<li>反向代理</li>
+<li>转码器</li>
+<li>匿名代理</li>
+</ul>
+</li>
+<li>使客户端流量流向代理主要有4种方式<ul>
+<li>修改客户端，比如浏览器设置代理，那HTTP请求就直接发送给代理了</li>
+<li>修改网络基础设施，直接在路由器或者某些设施上拦截，转向代理</li>
+<li>修改DNS，使代理服务器伪装成真实的web服务器名字和ip</li>
+<li>修改web服务器，返回重定向到代理服务器上。</li>
+</ul>
+</li>
+</ol>
+<h2 id="第七章-缓存"><a href="#第七章-缓存" class="headerlink" title="第七章 缓存"></a>第七章 缓存</h2><ol>
+<li>缓存可以节省宽带，加快客户端的反应速度。</li>
+<li>HTTP头中可以用来控制缓存的字段主要有<ul>
+<li>Expires:Fri, 22 Jan 2016 04:43:59 GMT。绝对时间点，在这个时间点之前都是直接拉取缓存，无需再次请求。但是因为全球各地的时间可能不一样，所以不建议使用这个，而且优先级低于Cache-Control。如果两者同时出现会被覆盖</li>
+<li>Cache-Control:max-age=86400。相对时间，即缓存有效期为24小时，24小时内都是直接拉取缓存，无需再次请求。</li>
+<li>Last-Modified/If-Modified-Since。请求时带上If-Modified-Since:Wed, 28 Nov 2012 06:02:44 GMT。web服务器收到请求后发现有头If-Modified-Since 则与被请求资源的最后修改时间进行比对。若最后修改时间较新，说明资源又被改动过，则响应整片资源内容。如果没有修改则返回304。响应返回会带上Last-Modified:Wed, 28 Nov 2012 06:02:44 GMT告诉浏览器资源的最后修改时间</li>
+<li>Etag/If-None-Match。web服务器响应请求时，告诉浏览器当前资源在服务器的唯一标识（生成规则由服务器自定义）。Apache中，ETag的值，默认是对文件的索引节（INode），大小（Size）和最后修改时间（MTime）进行Hash后得到的。当资源过期时（使用Cache-Control标识的max-age），发现资源具有Etag：05a7bfb2dcdcd1:0声明，客户端会再次向web服务器请求时带上头If-None-Match：05a7bfb2dcdcd1:0（Etag的值）。web服务器收到请求后发现请求头带有If-None-Match 则与被请求资源的相应校验串进行比对，决定返回200或304。</li>
+</ul>
+</li>
+<li>Etag主要是来解决Last-Modified没法解决的问题：时间精确到1秒以内、某些定期生成的文件，内容并没有变化、代理服务器的时间不一致或无法获取准确的文档修改时间。</li>
+</ol>
+<h2 id="第八章-集成点：网关、隧道及中继"><a href="#第八章-集成点：网关、隧道及中继" class="headerlink" title="第八章 集成点：网关、隧道及中继"></a>第八章 集成点：网关、隧道及中继</h2><ol>
+<li>网关可以作为某种翻译器使用，它抽象出了一种能够到达资源的方法。网关是资源和应用程序之间的粘合剂。应用程序可以（通过 HTTP或其他已定义的接口）请求网关来处理某条请求，网关可以提供一条响应。网关可以向数据库发送查询语句，或者生成动态的内容，就像一个门一样： 进去一条请求， 出来一个响应。</li>
+<li>隧道就是通过HTTP应用程序访问使用非HTTP协议的应用程序。Web隧道最常见的原因就是要在HTTP连接中嵌入非HTTP流量，这样，这类流量就可以穿过只允许Web流量通过的防火墙了</li>
+<li>HTTP中继（relay）是没有完全遵循HTTP规范的简单HTTP代理。中继负责处理HTTP中<br>建立连接的部分，然后对字节进行盲转发。</li>
+</ol>
+<h2 id="第九章-Web机器人"><a href="#第九章-Web机器人" class="headerlink" title="第九章 Web机器人"></a>第九章 Web机器人</h2><ol>
+<li>robots.txt文件用于控制爬虫获取页面的权限。格式为 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">User-<span class="string">Agent:</span> slurp</span><br><span class="line">User-<span class="string">Agent:</span> webcrawler</span><br><span class="line"><span class="string">Disallow:</span> /<span class="keyword">private</span></span><br><span class="line">User-<span class="string">Agent:</span> *</span><br><span class="line"><span class="string">Disallow:</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="第十章-HTTP-NG"><a href="#第十章-HTTP-NG" class="headerlink" title="第十章 HTTP-NG"></a>第十章 HTTP-NG</h2><p>这一章的内容已经没有多大参考价值了，HTTP2.0已经出来了，以谷歌的SPDY技术为主，主要就是异步连接复用，头压缩和请求响应管线化，复用TCP连接。实现缩短网页的加载时间和提高安全性。<br><a href="https://blog.youyoulemon.com/http2-0xie-yi-xiang-jie/" target="_blank" rel="noopener">HTTP2.0详解</a><br><a href="https://zh.wikipedia.org/wiki/SPDY" target="_blank" rel="noopener">SPDY 维基百科</a></p>
+<h1 id="第三部分-识别、认证与安全"><a href="#第三部分-识别、认证与安全" class="headerlink" title="第三部分 识别、认证与安全"></a>第三部分 识别、认证与安全</h1><h2 id="第十一章-客户端识别与Cookie机制"><a href="#第十一章-客户端识别与Cookie机制" class="headerlink" title="第十一章 客户端识别与Cookie机制"></a>第十一章 客户端识别与Cookie机制</h2><p>识别客户端主要方法有富url，cookie，ip，HTTP请求头，用户登录。cookie是用的最广泛的方法。</p>
+<h2 id="第十二章-基本认证机制"><a href="#第十二章-基本认证机制" class="headerlink" title="第十二章 基本认证机制"></a>第十二章 基本认证机制</h2><ol>
+<li>基本认证就是用户提供用户名和密码，服务器进行验证，目前广泛采用的认证方案。</li>
+<li>缺陷就在于密码是明文发送，容易被截获。需要配合ssl等加密通道结合使用。</li>
+</ol>
+<h2 id="第十三章-摘要认证"><a href="#第十三章-摘要认证" class="headerlink" title="第十三章 摘要认证"></a>第十三章 摘要认证</h2><ol>
+<li>客户端发送密码的摘要而不是发送明文密码。</li>
+<li>必须加上随机数，不然被截获好了摘要也就和截获了密码是一样的，加入随机数，保证每次摘要都是不一样的。</li>
+</ol>
+<h2 id="第十四章-安全HTTP"><a href="#第十四章-安全HTTP" class="headerlink" title="第十四章 安全HTTP"></a>第十四章 安全HTTP</h2><ol>
+<li>对称密钥加密技术就是，发送端和接收端要共享相同的密钥k才能进行通信。发送端用共享的密钥来加密报文，并将得到的密文发送给接收端。接收端收到密文，并对其应用解密函数和相同的共享密钥，恢复出原始的明文。</li>
+<li>公开密钥加密技术是编码密钥是众所周知的，但只有主机才知道私有的解密密钥，这<br>样，每个人都能找到某个特定主机的公开密钥，密钥的建立变得更加简单。但解码密钥是保密的，因此只有接收端才能对发送给它的报文进行解码。</li>
+<li>HTTPS在建立HTTP连接之前会先进行SSL连接，使客户端和服务端建立加密通道，然后忘了报文就全在这个加密通道上进行传输，服务端进行解密后再发送给传输层。</li>
+</ol>
+<h1 id="第四部分-实体、编码和国际化"><a href="#第四部分-实体、编码和国际化" class="headerlink" title="第四部分 实体、编码和国际化"></a>第四部分 实体、编码和国际化</h1><h2 id="第十五章-实体和编码"><a href="#第十五章-实体和编码" class="headerlink" title="第十五章 实体和编码"></a>第十五章 实体和编码</h2><ol>
+<li>Content-Length 首部指示出报文实体主体的字节大小，如果进行了压缩的话，那这个长度指的是压缩后的大小。</li>
+<li>Content-Encoding主要有gzip、compress、deflate三种无损压缩算法。gzip效率最高、使用最广泛。</li>
+</ol>
+<h2 id="第十六章-国际化"><a href="#第十六章-国际化" class="headerlink" title="第十六章 国际化"></a>第十六章 国际化</h2><ol>
+<li>服务端通过Content-Type中的charse参数和Content-Language通知客户端文档的字符集和语言。客户端通过Accept-Charset和Accept-Language告知服务端用户可以理解何种语言。</li>
+</ol>
+<h2 id="第十七章-内容协商与转码"><a href="#第十七章-内容协商与转码" class="headerlink" title="第十七章 内容协商与转码"></a>第十七章 内容协商与转码</h2><ol>
+<li>一个URL代表若干个不同的资源的时候，就需要协商具体提供哪个资源。主要有客户端驱动协商、服务器驱动的协商、透明(中间代理)协商。</li>
+<li>客户端驱动协商就是服务端返回可选列表，有客户端选择使用哪个。服务端协商就是根据客户端发送过来的信息比如首部或者UA来判定返回哪一个资源。</li>
+</ol>
+<h1 id="第五部分-内容发布与分发"><a href="#第五部分-内容发布与分发" class="headerlink" title="第五部分 内容发布与分发"></a>第五部分 内容发布与分发</h1><h2 id="第十八章-Web主机托管"><a href="#第十八章-Web主机托管" class="headerlink" title="第十八章 Web主机托管"></a>第十八章 Web主机托管</h2><p>使用托管，可以免去很多烦恼，同时让自己的网站更加可靠，被访问速度更快。</p>
+<h2 id="第十九章-发布系统"><a href="#第十九章-发布系统" class="headerlink" title="第十九章 发布系统"></a>第十九章 发布系统</h2><p>这个部分的内容已经有点过时了，但是用visual studio还是可以安装webDAV实现远程发布。现在常用的都是用git或者svn来实现远程代码提交以及发布了。</p>
+<h2 id="第二十章-重定向与负载均衡"><a href="#第二十章-重定向与负载均衡" class="headerlink" title="第二十章 重定向与负载均衡"></a>第二十章 重定向与负载均衡</h2><ol>
+<li>为了可靠的执行HTTP事务、最小化时延、节约网络带宽，经常需要使用重定向。</li>
+</ol>
+<h2 id="第二十一章-日记记录与使用情况跟踪"><a href="#第二十一章-日记记录与使用情况跟踪" class="headerlink" title="第二十一章 日记记录与使用情况跟踪"></a>第二十一章 日记记录与使用情况跟踪</h2><p>日志一般都会记录时间、请求端的ip、用户名、请求路径、响应状态码、主体长度</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/笔记/" rel="tag"># 笔记</a>
+          
+            <a href="/blog/tags/HTTP/" rel="tag"># HTTP</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2016/01/18/2016-01-18-字符编码笔记/" rel="next" title="字符编码笔记">
+                <i class="fa fa-chevron-left"></i> 字符编码笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2016/01/26/2016-01-26-大众点评数据抓取总结/" rel="prev" title="大众点评数据抓取总结">
+                大众点评数据抓取总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一部分-HTTP-Web的基础"><span class="nav-number">1.</span> <span class="nav-text">第一部分 HTTP:Web的基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一章-HTTP概述"><span class="nav-number">1.1.</span> <span class="nav-text">第一章 HTTP概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二章-URL与资源"><span class="nav-number">1.2.</span> <span class="nav-text">第二章 URL与资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三章-HTTP报文"><span class="nav-number">1.3.</span> <span class="nav-text">第三章 HTTP报文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四章-连接管理"><span class="nav-number">1.4.</span> <span class="nav-text">第四章 连接管理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二部分"><span class="nav-number">2.</span> <span class="nav-text">第二部分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第五章-Web服务器"><span class="nav-number">2.1.</span> <span class="nav-text">第五章 Web服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六章-代理"><span class="nav-number">2.2.</span> <span class="nav-text">第六章 代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第七章-缓存"><span class="nav-number">2.3.</span> <span class="nav-text">第七章 缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第八章-集成点：网关、隧道及中继"><span class="nav-number">2.4.</span> <span class="nav-text">第八章 集成点：网关、隧道及中继</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第九章-Web机器人"><span class="nav-number">2.5.</span> <span class="nav-text">第九章 Web机器人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十章-HTTP-NG"><span class="nav-number">2.6.</span> <span class="nav-text">第十章 HTTP-NG</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第三部分-识别、认证与安全"><span class="nav-number">3.</span> <span class="nav-text">第三部分 识别、认证与安全</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第十一章-客户端识别与Cookie机制"><span class="nav-number">3.1.</span> <span class="nav-text">第十一章 客户端识别与Cookie机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十二章-基本认证机制"><span class="nav-number">3.2.</span> <span class="nav-text">第十二章 基本认证机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十三章-摘要认证"><span class="nav-number">3.3.</span> <span class="nav-text">第十三章 摘要认证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十四章-安全HTTP"><span class="nav-number">3.4.</span> <span class="nav-text">第十四章 安全HTTP</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第四部分-实体、编码和国际化"><span class="nav-number">4.</span> <span class="nav-text">第四部分 实体、编码和国际化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第十五章-实体和编码"><span class="nav-number">4.1.</span> <span class="nav-text">第十五章 实体和编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十六章-国际化"><span class="nav-number">4.2.</span> <span class="nav-text">第十六章 国际化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十七章-内容协商与转码"><span class="nav-number">4.3.</span> <span class="nav-text">第十七章 内容协商与转码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第五部分-内容发布与分发"><span class="nav-number">5.</span> <span class="nav-text">第五部分 内容发布与分发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第十八章-Web主机托管"><span class="nav-number">5.1.</span> <span class="nav-text">第十八章 Web主机托管</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十九章-发布系统"><span class="nav-number">5.2.</span> <span class="nav-text">第十九章 发布系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二十章-重定向与负载均衡"><span class="nav-number">5.3.</span> <span class="nav-text">第二十章 重定向与负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二十一章-日记记录与使用情况跟踪"><span class="nav-number">5.4.</span> <span class="nav-text">第二十一章 日记记录与使用情况跟踪</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

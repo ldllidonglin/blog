@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="flux,redux,vuex," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="介绍当前比较流行的几种前端数据管理的解决方案">
+<meta name="keywords" content="flux,redux,vuex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端数据管理">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2018/04/06/2018-04-06-前端数据管理/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="介绍当前比较流行的几种前端数据管理的解决方案">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ldllidonglin.github.io/blog/2018/04/06/2018-04-06-前端数据管理/flux.png">
+<meta property="og:updated_time" content="2018-04-07T09:35:33.686Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端数据管理">
+<meta name="twitter:description" content="介绍当前比较流行的几种前端数据管理的解决方案">
+<meta name="twitter:image" content="http://ldllidonglin.github.io/blog/2018/04/06/2018-04-06-前端数据管理/flux.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2018/04/06/2018-04-06-前端数据管理/"/>
+
+
+
+
+
+  <title>前端数据管理 | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2018/04/06/2018-04-06-前端数据管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">前端数据管理</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-06T00:00:00+08:00">
+                2018-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>介绍当前比较流行的几种前端数据管理的解决方案<br><a id="more"></a></p>
+<h1 id="flux"><a href="#flux" class="headerlink" title="flux"></a>flux</h1><p>facebook推出的构建用户界面的应用架构<br><img src="./flux.png" alt="flux结构"></p>
+<ul>
+<li>单向数据流，在view层不能直接修改数据，要修改数据只能通过提交action，然后dispatcher到stroe，使得整体数据的变化是可控的。</li>
+<li>dispatcher作为连接action和store的通道，一个dispatcher必须注册各个action type的回调函数，从而实现，在回调函数中调用stroe的各种函数，让store实现变化。</li>
+<li>在view层监听store的变化，从而更改view内部的state</li>
+<li>官方实现版本<h2 id="个人理解"><a href="#个人理解" class="headerlink" title="个人理解"></a>个人理解</h2></li>
+<li>dispatcher是否可以去掉，从flux/util提供的reduceStore来看，也是可以丢掉的。</li>
+<li>太繁琐了，需要自己在view层监听store的变化，从而去改变state，应该设计一种根store传递到view，提交action时，修改store，从而直接导致view的变化。</li>
+</ul>
+<h1 id="flux-utils"><a href="#flux-utils" class="headerlink" title="flux/utils"></a>flux/utils</h1><ul>
+<li><p>flux应该也知道其官方实现的flux太繁琐了，所以进化出flux/utils，其中有几个重要的概念</p>
+<ul>
+<li><p>container</p>
+<ul>
+<li>控制view，收集信息<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> AppView <span class="keyword">from</span> <span class="string">'../views/AppView'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;Container&#125; <span class="keyword">from</span> <span class="string">'flux/utils'</span>;</span><br><span class="line"><span class="keyword">import</span> TodoActions <span class="keyword">from</span> <span class="string">'../data/TodoActions'</span>;</span><br><span class="line"><span class="keyword">import</span> TodoDraftStore <span class="keyword">from</span> <span class="string">'../data/TodoDraftStore'</span>;</span><br><span class="line"><span class="keyword">import</span> TodoEditStore <span class="keyword">from</span> <span class="string">'../data/TodoEditStore'</span>;</span><br><span class="line"><span class="keyword">import</span> TodoStore <span class="keyword">from</span> <span class="string">'../data/TodoStore'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getStores</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> [</span><br><span class="line">    TodoEditStore,</span><br><span class="line">    TodoDraftStore,</span><br><span class="line">    TodoStore,</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getState</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    draft: TodoDraftStore.getState(),</span><br><span class="line">    editing: TodoEditStore.getState(),</span><br><span class="line">    todos: TodoStore.getState(),</span><br><span class="line"></span><br><span class="line">    onAdd: TodoActions.addTodo,</span><br><span class="line">    onDeleteCompletedTodos: TodoActions.deleteCompletedTodos,</span><br><span class="line">    onDeleteTodo: TodoActions.deleteTodo,</span><br><span class="line">    onEditTodo: TodoActions.editTodo,</span><br><span class="line">    onStartEditingTodo: TodoActions.startEditingTodo,</span><br><span class="line">    onStopEditingTodo: TodoActions.stopEditingTodo,</span><br><span class="line">    onToggleAllTodos: TodoActions.toggleAllTodos,</span><br><span class="line">    onToggleTodo: TodoActions.toggleTodo,</span><br><span class="line">    onUpdateDraft: TodoActions.updateDraft,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Container.createFunctional(AppView, getStores, getState);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>reduceStore</p>
+<ul>
+<li>为了解决之前的store太繁琐。在container执行的时候，会传入action的所有handler，view层手动执行handler，从而触发dispatch。在store的reduce方法中，会针对各种action type返回全新的store<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//view</span></span><br><span class="line">&lt;input</span><br><span class="line">  checked=&#123;areAllComplete ? <span class="string">'checked'</span> : <span class="string">''</span>&#125;</span><br><span class="line">  id=<span class="string">"toggle-all"</span></span><br><span class="line">  <span class="keyword">type</span>=<span class="string">"checkbox"</span></span><br><span class="line">  onChange=&#123;props.onToggleAllTodos&#125;</span><br><span class="line">/&gt;</span><br><span class="line"><span class="comment">// action</span></span><br><span class="line">toggleAllTodos() &#123;</span><br><span class="line">  TodoDispatcher.dispatch(&#123;</span><br><span class="line">    <span class="keyword">type</span>: TodoActionTypes.TOGGLE_ALL_TODOS,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// store</span></span><br><span class="line"><span class="keyword">case</span> TodoActionTypes.TOGGLE_ALL_TODOS:</span><br><span class="line">  <span class="keyword">const</span> areAllComplete = state.every(<span class="function"><span class="params">todo</span> =&gt;</span> todo.complete);</span><br><span class="line">  <span class="keyword">return</span> state.map(<span class="function"><span class="params">todo</span> =&gt;</span> todo.set(<span class="string">'complete'</span>, !areAllComplete));</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>解决了最初版本中，需要在view层监听数据变化，从而触发view更新。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="redux"><a href="#redux" class="headerlink" title="redux"></a>redux</h1><ul>
+<li>和flux加上flux/util很相似。就三个概念，action描述数据变化，reducer根据action来产生新的state。store就是联系action和reducer的。他会负责dispatch action。dispatch内部会执行reducer方法，从而更新state</li>
+<li>store有一个subscribe函数，用来注册数据变化的监听函数，dispatch时，会在执行完reducer后，执行subscribe注册的函数。</li>
+<li>总的来讲就是比flux简洁许多，整个结构清晰明了。</li>
+<li>使用中间件的方式来处理异步数据流，比较有名的有<a href="https://github.com/gaearon/redux-thunk" target="_blank" rel="noopener">redux-thunk</a>和<a href="https://github.com/redux-saga/redux-saga" target="_blank" rel="noopener">redux-saga</a>和<a href="https://github.com/redux-utilities/redux-promise" target="_blank" rel="noopener">redux-promise</a></li>
+<li>示例：<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> reducer = <span class="function">(<span class="params">state = &#123;count: 0&#125;, action</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type)&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'INCREASE'</span>: <span class="keyword">return</span> &#123;count: state.count + <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'DECREASE'</span>: <span class="keyword">return</span> &#123;count: state.count - <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">default</span>: <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> actions = &#123;</span><br><span class="line">  increase: <span class="function"><span class="params">()</span> =&gt;</span> (&#123;<span class="keyword">type</span>: <span class="string">'INCREASE'</span>&#125;),</span><br><span class="line">  decrease: <span class="function"><span class="params">()</span> =&gt;</span> (&#123;<span class="keyword">type</span>: <span class="string">'DECREASE'</span>&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> store = createStore(reducer);</span><br><span class="line"></span><br><span class="line">store.subscribe(<span class="function"><span class="params">()</span> =&gt;</span></span><br><span class="line">  <span class="built_in">console</span>.log(store.getState())</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">store.dispatch(actions.increase()) <span class="comment">// &#123;count: 1&#125;</span></span><br><span class="line">store.dispatch(actions.increase()) <span class="comment">// &#123;count: 2&#125;</span></span><br><span class="line">store.dispatch(actions.increase()) <span class="comment">// &#123;count: 3&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="react-redux"><a href="#react-redux" class="headerlink" title="react-redux"></a>react-redux</h1><ul>
+<li>通过provider 在getChildContext 把store挂在context上，子组件就能通过context获取store，解决了用props层层传递的问题</li>
+<li>容器组件都是connect过的，connect通过context获取store，然后再map到纯UI组件。</li>
+<li>为了避免每个组件都从context上获取数据，又衍生了容器组件和purComponent。并且提供connect方法，把container包装一下，connect去context上获取数据<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Provider</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  getChildContext() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; store: <span class="keyword">this</span>.store &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  constructor(props, context) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props, context)</span><br><span class="line">    <span class="keyword">this</span>.store = props.store</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">Children</span>.only(<span class="keyword">this</span>.props.children)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="vuex"><a href="#vuex" class="headerlink" title="vuex"></a>vuex</h1><ul>
+<li>使用单一状态树，一个对象就包含了全部的应用层级状态。</li>
+<li>几个概念，state(状态)、mutations(同步更改)、actions(异步更改)、getters(store的计算属性)、Module(模块化分割单一状态树)。</li>
+<li>为了解决在不同组件中重复声明内部状态和store的联系，增加了mapState、mapMutations、mapGetters、mapActions几个辅助函数。</li>
+<li><p>mutation必须是同步的，异步数据用dispatch action来触发异步操作。action中获取要异步数据后使用commit mutation来更新state。利用promise来解决异步数据的管理</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">actions: &#123;</span><br><span class="line">  actionA (&#123; commit &#125;) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Promise(<span class="function"><span class="params">(resolve, reject)</span> =&gt;</span> &#123;</span><br><span class="line">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        commit(<span class="string">'someMutation'</span>)</span><br><span class="line">        resolve()</span><br><span class="line">      &#125;, <span class="number">1000</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">store.dispatch(<span class="string">'actionA'</span>).<span class="keyword">then</span>(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="regexp">//</span> ...</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例子：</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">const store = new Vuex.Store(&#123;</span><br><span class="line">  <span class="keyword">state</span>: &#123;</span><br><span class="line">    count: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  mutations: &#123;</span><br><span class="line">    increment (<span class="keyword">state</span>,payload) &#123;</span><br><span class="line">      <span class="keyword">state</span>.count++</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  getters: &#123;</span><br><span class="line">    doneTodos: <span class="keyword">state</span> =&gt; &#123;</span><br><span class="line">      return <span class="keyword">state</span>.todos.filter(todo =&gt; todo.done)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  actions: &#123;</span><br><span class="line">    increment (context) &#123;</span><br><span class="line">      context.commit('increment')</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">store.commit('increment', <span class="number">10</span>)</span><br><span class="line">    </span><br><span class="line">const moduleA = &#123;</span><br><span class="line">  <span class="keyword">state</span>: &#123; ... &#125;,</span><br><span class="line">  mutations: &#123; ... &#125;,</span><br><span class="line">  actions: &#123; ... &#125;,</span><br><span class="line">  getters: &#123; ... &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const moduleB = &#123;</span><br><span class="line">  <span class="keyword">state</span>: &#123; ... &#125;,</span><br><span class="line">  mutations: &#123; ... &#125;,</span><br><span class="line">  actions: &#123; ... &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const store = new Vuex.Store(&#123;</span><br><span class="line">  modules: &#123;</span><br><span class="line">    a: moduleA,</span><br><span class="line">    b: moduleB</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="Mobx"><a href="#Mobx" class="headerlink" title="Mobx"></a>Mobx</h1><ul>
+<li>响应式、依赖收集</li>
+<li>和react结合的例子，对视图用@observer装饰器，声明为依赖。数据变化的时候会自动执行数据对应的依赖<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;observer&#125; from <span class="symbol">'mobx</span>-react';</span><br><span class="line"></span><br><span class="line"><span class="meta">@observer</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimerView</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        <span class="keyword">return</span> (&lt;button onClick=&#123;<span class="keyword">this</span>.onReset.bind(<span class="keyword">this</span>)&#125;&gt;</span><br><span class="line">                <span class="type">Seconds</span> passed: &#123;<span class="keyword">this</span>.props.appState.timer&#125;</span><br><span class="line">            &lt;/button&gt;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    onReset () &#123;</span><br><span class="line">        <span class="keyword">this</span>.props.appState.resetTimer();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">ReactDOM</span>.render(&lt;<span class="type">TimerView</span> appState=&#123;appState&#125; /&gt;, document.body);</span><br><span class="line"></span><br><span class="line">appState.resetTimer = action(function reset() &#123;</span><br><span class="line">    appState.timer = <span class="number">0</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">setInterval(action(function tick() &#123;</span><br><span class="line">    appState.timer += <span class="number">1</span>;</span><br><span class="line">&#125;), <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="rxjs"><a href="#rxjs" class="headerlink" title="rxjs"></a>rxjs</h1><ul>
+<li>结合了观察者模式、迭代器模式 和 使用集合的函数式编程，以满足以一种理想方式来管理事件序列所需要的一切。事件驱动、流管理。</li>
+<li>结合react的例子<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> messages <span class="keyword">from</span> <span class="string">'./someObservable'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponent</span> <span class="keyword">extends</span> <span class="title">ObservableComponent</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line">    <span class="keyword">this</span>.state = &#123;<span class="attr">messages</span>: []&#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="keyword">this</span>.messages = messages</span><br><span class="line">      <span class="comment">// 在数组中累积我们的消息</span></span><br><span class="line">      .scan(<span class="function">(<span class="params">messages, message</span>) =&gt;</span> [message].concat(messages), [])</span><br><span class="line">      <span class="comment">// 当得到一条新消息时进行渲染</span></span><br><span class="line">      .subscribe(<span class="function"><span class="params">messages</span> =&gt;</span> <span class="keyword">this</span>.setState(&#123;<span class="attr">messages</span>: messages&#125;));</span><br><span class="line">  &#125;</span><br><span class="line">  componentWillUnmount() &#123;</span><br><span class="line">    <span class="keyword">this</span>.messages.unsubscribe();</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;ul&gt;</span><br><span class="line">          &#123;<span class="keyword">this</span>.state.messages.map(<span class="function"><span class="params">message</span> =&gt;</span> &lt;li&gt;&#123;message.text&#125;&lt;<span class="regexp">/li&gt;)&#125;</span></span><br><span class="line"><span class="regexp">        &lt;/u</span>l&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default MyComponent;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><a href="https://github.com/facebook/flux/" target="_blank" rel="noopener">flux</a></li>
+<li><a href="https://github.com/reactjs/redux/" target="_blank" rel="noopener">redux</a></li>
+<li><a href="https://segmentfault.com/a/1190000009626788" target="_blank" rel="noopener">redux源码解析</a></li>
+<li><a href="http://cn.redux.js.org/docs/api/createStore.html" target="_blank" rel="noopener">redux中文文档</a></li>
+<li><a href="http://taobaofed.org/blog/2016/08/18/react-redux-connect/" target="_blank" rel="noopener">淘宝FED：React 实践心得：react-redux 之 connect 方法详解</a></li>
+<li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
+<li><a href="https://mobx.js.org/" target="_blank" rel="noopener">mobx</a></li>
+<li><a href="http://reactivex.io/rxjs/" target="_blank" rel="noopener">rxjs</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/flux/" rel="tag"># flux</a>
+          
+            <a href="/blog/tags/redux/" rel="tag"># redux</a>
+          
+            <a href="/blog/tags/vuex/" rel="tag"># vuex</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2018/01/02/2018-01-02-2017年终总结/" rel="next" title="2017年终总结">
+                <i class="fa fa-chevron-left"></i> 2017年终总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2018/06/03/2018-06-03-service worker的思考/" rel="prev" title="service worker的思考">
+                service worker的思考 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/default_avatar.jpg"
+                alt="李冬琳" />
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#flux"><span class="nav-number">1.</span> <span class="nav-text">flux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#个人理解"><span class="nav-number">1.1.</span> <span class="nav-text">个人理解</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#flux-utils"><span class="nav-number">2.</span> <span class="nav-text">flux/utils</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redux"><span class="nav-number">3.</span> <span class="nav-text">redux</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#react-redux"><span class="nav-number">4.</span> <span class="nav-text">react-redux</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vuex"><span class="nav-number">5.</span> <span class="nav-text">vuex</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mobx"><span class="nav-number">6.</span> <span class="nav-text">Mobx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rxjs"><span class="nav-number">7.</span> <span class="nav-text">rxjs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">8.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
