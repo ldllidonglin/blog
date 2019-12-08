@@ -62,32 +62,32 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 
 * [Nullish coalescing Operator](https://github.com/tc39/proposal-nullish-coalescing)
 这个和Optional Chaining是配合使用的，当使用了Optional Chaining后，有时只想判断当时null或者undefined时用默认值时，用下面这个代码就会有问题
-```
-const response = {
-  settings: {
-    nullValue: null,
-    height: 400,
-    animationDuration: 0,
-    headerText: '',
-    showSplashScreen: false
-  }
-};
-const headerText = response.settings?.headerText || 'Hello, world!'; //'Hello, world!'
-```
-所以可以用??来解决这个问题，只有为null或者undefined时，才会是false
-```
-const response = {
-  settings: {
-    nullValue: null,
-    height: 400,
-    animationDuration: 0,
-    headerText: '',
-    showSplashScreen: false
-  }
-};
+  ```
+  const response = {
+    settings: {
+      nullValue: null,
+      height: 400,
+      animationDuration: 0,
+      headerText: '',
+      showSplashScreen: false
+    }
+  };
+  const headerText = response.settings?.headerText || 'Hello, world!'; //'Hello, world!'
+  ```
+  所以可以用??来解决这个问题，只有为null或者undefined时，才会是false
+  ```
+  const response = {
+    settings: {
+      nullValue: null,
+      height: 400,
+      animationDuration: 0,
+      headerText: '',
+      showSplashScreen: false
+    }
+  };
 
-const undefinedValue = response.settings?.undefinedValue ?? 'some other default'; // result: 'some other default'
-```
+  const undefinedValue = response.settings?.undefinedValue ?? 'some other default'; // result: 'some other default'
+  ```
 * [RegExp Match array offsets](https://github.com/tc39/proposal-regexp-match-indices)
   + exec方法返回值中增加一个indices属性，标识各个捕获组的start和end
   + 示例
