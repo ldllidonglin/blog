@@ -5,6 +5,29 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。第一次写是在2018.01.17
 <!--more-->
+## 2020.04.25更新
+2020.03.31 - 2020.04.02的会议结果，ECMAScript2020定稿
+### 新增1个提案到stage4
+* import.meta 之前已经介绍过了，但是目前貌似只有一个import.meta.url属性，import.meta是可变，未来估计会有更多信息。默认为空，只有在第一次获取这个属性的时候，才会获得
+
+### 新增1个提案到stage3
+* [proposal-logical-assignment](https://github.com/tc39/proposal-logical-assignment)
+  + 逻辑运算和赋值运算合并的一个操作符
+  + 使用示例
+  ```
+    a ||= b;
+    a || (a = b);
+
+    // "And And Equals"
+    a &&= b;
+    a && (a = b);
+
+    // "QQ Equals"
+    a ??= b;
+    a ?? (a = b);
+  ```
+
+
 ## 2019.12.08更新
 ### 新增3个提案到stage4
 * for-in mechanics
