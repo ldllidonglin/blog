@@ -99,12 +99,12 @@ sourcemap文件就是一个记录了压缩后的代码和源代码的映射关�
   0101 -> 001010 -> 10 -> K
   0000 -> 000000 -> 0  -> A
   0000 -> 000000 -> 0  -> A
-  0111 -> 001110 -> 14 -> 0
+  0111 -> 001110 -> 14 -> O
   ```
 
 ### 来一个复杂示例
 #### 源代码
-```
+```JavaScript
 function a() {
   var b = "01234567890123456789";var d=1
 };
@@ -112,13 +112,18 @@ a();
 ```
 
 #### 压缩后的代码
-```
+```JavaScript
 function a(){var b="01234567890123456789";var d=1}a();
 ```
 
 #### 对应的source map
-```
-{"version":3,"sources":["./a.js"],"names":["a","b","d"],"mappings":"AAAA,SAASA,IACP,IAAIC,EAAI,uBAAuB,IAAIC,EAAE,EAEvCF"}
+```json
+{
+  "version":3,
+  "sources":["./a.js"],
+  "names":["a","b","d"],
+  "mappings":"AAAA,SAASA,IACP,IAAIC,EAAI,uBAAuB,IAAIC,EAAE,EAEvCF"
+}
 ```
 
 #### 各个符号的映射关系建立,位置信息 -> 二进制表示 -> VLQ二进制 -> BASE64编码
