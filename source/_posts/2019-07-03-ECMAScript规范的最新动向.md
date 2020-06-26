@@ -5,6 +5,11 @@ categories: ECMAScript规范
 ---
 这篇文章主要是关注ECMAScript规范最新有什么变化，关注下哪些Proposal进入stage3、4。还有就是一些重点Proposal, 所以这篇文章会持续更新。第一次写是在2018.01.17
 <!--more-->
+## 2020.06.26 更新
+2020.06.01 - 2020.06.04的会议结果
+### 新增一个提案到stage4
+* [String.prototype.replaceAll](https://github.com/tc39/proposal-string-replaceall),ECMAScript2021的第一个feature
+
 ## 2020.04.25更新
 2020.03.31 - 2020.04.02的会议结果，ECMAScript2020定稿
 ### 新增1个提案到stage4
