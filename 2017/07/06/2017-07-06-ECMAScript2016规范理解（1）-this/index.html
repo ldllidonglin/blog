@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/blog/images/browserconfig.xml">
+
+
+
+  <meta name="keywords" content="JavaScript,ECMAScript规范,this,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="对于this的解读已经非常多了，是一个已经讲烂了的话题，也是面试中一定会问的题目。you don‘t know js中对于this的总结也是非常全面，我看很多博客的内容其实都是这本书上的。但是我想从规范的角度去理解this，而不是从别人总结好的几条规律来理解。（我指的规范是ECMAScript2016），写这篇文章也是我对内的一次分享其中关于this的总结。">
+<meta name="keywords" content="JavaScript,ECMAScript规范,this">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript2016规范理解（1）-this">
+<meta property="og:url" content="http://ldllidonglin.github.io/blog/2017/07/06/2017-07-06-ECMAScript2016规范理解（1）-this/index.html">
+<meta property="og:site_name" content="李冬琳的博客">
+<meta property="og:description" content="对于this的解读已经非常多了，是一个已经讲烂了的话题，也是面试中一定会问的题目。you don‘t know js中对于this的总结也是非常全面，我看很多博客的内容其实都是这本书上的。但是我想从规范的角度去理解this，而不是从别人总结好的几条规律来理解。（我指的规范是ECMAScript2016），写这篇文章也是我对内的一次分享其中关于this的总结。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-13T18:26:34.727Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript2016规范理解（1）-this">
+<meta name="twitter:description" content="对于this的解读已经非常多了，是一个已经讲烂了的话题，也是面试中一定会问的题目。you don‘t know js中对于this的总结也是非常全面，我看很多博客的内容其实都是这本书上的。但是我想从规范的角度去理解this，而不是从别人总结好的几条规律来理解。（我指的规范是ECMAScript2016），写这篇文章也是我对内的一次分享其中关于this的总结。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ldllidonglin.github.io/blog/2017/07/06/2017-07-06-ECMAScript2016规范理解（1）-this/">
+
+
+
+
+
+  <title>ECMAScript2016规范理解（1）-this | 李冬琳的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1a54bf39d8dd8d00000bcfea1fb240f2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李冬琳的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">努力 奋斗</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ldllidonglin.github.io/blog/blog/2017/07/06/2017-07-06-ECMAScript2016规范理解（1）-this/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李冬琳">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/blog/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李冬琳的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ECMAScript2016规范理解（1）-this</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-06T00:00:00+00:00">
+                2017-07-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/ECMAScript规范/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript规范</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>对于this的解读已经非常多了，是一个已经讲烂了的话题，也是面试中一定会问的题目。you don‘t know js中对于this的总结也是非常全面，我看很多博客的内容其实都是这本书上的。但是我想从规范的角度去理解this，而不是从别人总结好的几条规律来理解。（我指的规范是<a href="http://www.ecma-international.org/ecma-262/7.0/index.html" target="_blank" rel="noopener">ECMAScript2016</a>），写这篇文章也是我对内的一次<a href="https://ldllidonglin.github.io/learn-output/slides/ECMAScript.html">分享</a>其中关于this的总结。<br><a id="more"></a></p>
+<h2 id="this-是什么？"><a href="#this-是什么？" class="headerlink" title="this 是什么？"></a>this 是什么？</h2><p>规范中，有标明this是什么的地方一共有三处:</p>
+<ul>
+<li>关键字（11.6.2.1）</li>
+<li>主值表达式（12.2.2）</li>
+<li>词法环境中的环境记录项的属性（8.1.1）</li>
+</ul>
+<p>this是主值表达式，从这个定义出发，我们可以知道如何确定this的值，而他是词法环境中环境记录的一个属性就决定了其值是如何赋值的，以及从哪里去获取它的值。</p>
+<h2 id="this表达式的执行过程"><a href="#this表达式的执行过程" class="headerlink" title="this表达式的执行过程"></a>this表达式的执行过程</h2><p>规范12.2.2.1<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PrimaryExpression:<span class="keyword">this</span></span><br><span class="line">    <span class="keyword">Return</span> ? ResolveThisBinding( ).</span><br></pre></td></tr></table></figure></p>
+<p>规范的8.3.4 定义了ResolveThisBinding函数<br><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Let envRec be GetThisEnvironment( ).</span><br><span class="line">Return ? envRec.GetThisBinding().</span><br></pre></td></tr></table></figure></p>
+<p>这里又涉及到两个函数，GetThisEnvironment和envRec.GetThisBinding()。<br>规范的8.3.3 定义了GetThisEnvironment<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Let</span> lex be the running execution context<span class="comment">'s LexicalEnvironment.</span></span><br><span class="line">Repeat:</span><br><span class="line">    <span class="keyword">Let</span> envRec be lex<span class="comment">'s EnvironmentRecord.</span></span><br><span class="line">    <span class="keyword">Let</span> exists be envRec.HasThisBinding().</span><br><span class="line">    <span class="keyword">If</span> exists <span class="keyword">is</span> <span class="literal">true</span>, <span class="keyword">return</span> envRec.</span><br><span class="line">    <span class="keyword">Let</span> outer be the value <span class="keyword">of</span> lex<span class="comment">'s outer environment reference.</span></span><br><span class="line">    <span class="keyword">Let</span> lex be outer.</span><br></pre></td></tr></table></figure></p>
+<p>上面的意思就是，从当前执行上下文的词法环境开始，不断往上寻找含有this值的词法环境，直到找到为止，这个和原型链上属性的查找模式一样。一定会找到含有this的词法环境，因为规范规定，最外层的词法环境就是全局词法环境，而全局词法环境是一定有this值的。</p>
+<p>找到了含有this的词法环境后，就是执行envRec.GetThisBinding()。规范规定一共有5种词法环境，其中声明式词法环境、对象式词法环境是没有this的，模块式词法环境的this值是undefined，全局词法环境的this值就是[[GlobalThisValue]]这个内部值，这个内部值有宿主环境提供，众所周知，在浏览器环境下this绑定的就是window对象。所以只剩下函数式词法环境的值了</p>
+<p>8.1.1.3.4 定义了这个函数的执行过程<br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Let</span> envRec be the function <span class="symbol">Environment</span> <span class="symbol">Record</span> for which the method was invoked.</span><br><span class="line"><span class="symbol">Assert</span>: envRec.[[<span class="symbol">ThisBindingStatus</span>]] is not <span class="string">"lexical"</span>.</span><br><span class="line"><span class="symbol">If</span> envRec.[[<span class="symbol">ThisBindingStatus</span>]] is <span class="string">"uninitialized"</span>, throw a <span class="symbol">ReferenceError</span> exception.</span><br><span class="line"><span class="symbol">Return</span> envRec.[[<span class="symbol">ThisValue</span>]].</span><br></pre></td></tr></table></figure></p>
+<h2 id="this的使用场景"><a href="#this的使用场景" class="headerlink" title="this的使用场景"></a>this的使用场景</h2><p>前面讲了这么多，就是说this是如何取值的。同时规范也定义了this是词法环境中环境记录的一个属性，在初始化一个词法环境的时候，都会对this值进行初始化，也就是所谓的this绑定。所以就需要先明白this一共有多少种使用场景，根据使用场景来确定this值是如何进行绑定的。</p>
+<h3 id="全局环境"><a href="#全局环境" class="headerlink" title="全局环境"></a>全局环境</h3><p>当JavaScript代码开始执行时，就会初始化一个全局词法环境，而全局词法环境中的this是由宿主环境定义的，浏览器环境下就是window，nodejs环境下就是global</p>
+<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><p>上面也提到了，this只在全局环境和函数词法环境有定义。函数环境下this的绑定会更复杂一些，因为函数可以当作构造函数，也能直接调用，并且还有call\apply，es6的箭头函数、es6的class等情况。</p>
+<h4 id="普通函数调用"><a href="#普通函数调用" class="headerlink" title="普通函数调用"></a>普通函数调用</h4><p>首先需要先明确一点，所有的函数最终执行，都是调用的函数对象的[[Call]]方法，调用方式为[[Call]] ( thisArgument, argumentsList)。规范的9.2.1中定义了[[Call]]方法的执行过程：</p>
+<ul>
+<li>创建一个新的执行上下文，并且执行上下文的词法环境是函数词法环境</li>
+<li>给当前的执行上下文绑定this<ul>
+<li>如果函数的[[thisMode]]为lexical，返回</li>
+<li>如果是严格模式，this值为thisArgument，返回</li>
+<li>如果thisArgument是null或者undefined，this为全局环境的this值</li>
+<li>否则设置this值为thisArgument</li>
+</ul>
+</li>
+<li>执行函数体</li>
+<li>遇到this时，是执行this表达式</li>
+</ul>
+<p>从上面的过程中可以得到三条非常有用的信息：</p>
+<ul>
+<li>函数执行的时候，已经确定this值了，并且会传给[[Call]]函数，只是在执行的时候进行绑定，从而使得this表达式执行的时候能取到this值。</li>
+<li>箭头函数的[[thisMode]]为lexical，所以箭头函数执行时，是不绑定this值的。</li>
+<li>严格模式下，任何值都会被绑定为this，非严格模式，绑定undefined和null，会被绑定为全局环境的this值。</li>
+</ul>
+<h5 id="函数执行前如何确定this"><a href="#函数执行前如何确定this" class="headerlink" title="函数执行前如何确定this"></a>函数执行前如何确定this</h5><p>普通函数的调用方式，属于Left-Hand-Side Expressions中的Call Expression：MemberExpression Arguments，在12.3.4中规定了其执行过程，关键就是确定MemberExpression的执行结果，从而确定this值。<br><figure class="highlight pony"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Let</span> <span class="meta">ref</span> <span class="keyword">be</span> the result of evaluating <span class="type">MemberExpression</span>.</span><br><span class="line"><span class="type">Let</span> func <span class="keyword">be</span> ? <span class="type">GetValue</span>(<span class="meta">ref</span>).</span><br><span class="line"><span class="type">If</span> <span class="type">Type</span>(<span class="meta">ref</span>) <span class="keyword">is</span> <span class="type">Reference</span> <span class="keyword">and</span> <span class="type">IsPropertyReference</span>(<span class="meta">ref</span>) <span class="keyword">is</span> <span class="literal">false</span> <span class="keyword">and</span> <span class="type">GetReferencedName</span>(<span class="meta">ref</span>) <span class="keyword">is</span> <span class="string">"eval"</span>, <span class="keyword">then</span></span><br><span class="line">  <span class="type">If</span> <span class="type">SameValue</span>(func, %eval%) <span class="keyword">is</span> <span class="literal">true</span>, <span class="keyword">then</span></span><br><span class="line">    <span class="type">Let</span> argList <span class="keyword">be</span> ? <span class="type">ArgumentListEvaluation</span>(<span class="type">Arguments</span>).</span><br><span class="line">    <span class="type">If</span> argList has no elements, <span class="keyword">return</span> undefined.</span><br><span class="line">    <span class="type">Let</span> evalText <span class="keyword">be</span> the first element of argList.</span><br><span class="line">    <span class="type">If</span> the source code matching <span class="literal">this</span> <span class="type">CallExpression</span> <span class="keyword">is</span> strict code, <span class="keyword">let</span> strictCaller <span class="keyword">be</span> <span class="literal">true</span>. <span class="type">Otherwise</span> <span class="keyword">let</span> strictCaller <span class="keyword">be</span> <span class="literal">false</span>.</span><br><span class="line">    <span class="type">Let</span> evalRealm <span class="keyword">be</span> the current <span class="type">Realm</span> <span class="type">Record</span>.</span><br><span class="line">    <span class="type">Return</span> ? <span class="type">PerformEval</span>(evalText, evalRealm, strictCaller, <span class="literal">true</span>).</span><br><span class="line"><span class="type">If</span> <span class="type">Type</span>(<span class="meta">ref</span>) <span class="keyword">is</span> <span class="type">Reference</span>, <span class="keyword">then</span></span><br><span class="line">  <span class="type">If</span> <span class="type">IsPropertyReference</span>(<span class="meta">ref</span>) <span class="keyword">is</span> <span class="literal">true</span>, <span class="keyword">then</span></span><br><span class="line">    <span class="type">Let</span> thisValue <span class="keyword">be</span> <span class="type">GetThisValue</span>(<span class="meta">ref</span>).</span><br><span class="line">  <span class="type">Else</span>, the base of <span class="meta">ref</span> <span class="keyword">is</span> an <span class="type">Environment</span> <span class="type">Record</span></span><br><span class="line">    <span class="type">Let</span> refEnv <span class="keyword">be</span> <span class="type">GetBase</span>(<span class="meta">ref</span>).</span><br><span class="line">    <span class="type">Let</span> thisValue <span class="keyword">be</span> refEnv.<span class="type">WithBaseObject</span>().</span><br><span class="line"><span class="type">Else</span> <span class="type">Type</span>(<span class="meta">ref</span>) <span class="keyword">is</span> <span class="keyword">not</span> <span class="type">Reference</span>,</span><br><span class="line">  <span class="type">Let</span> thisValue <span class="keyword">be</span> undefined.</span><br><span class="line"><span class="type">Let</span> thisCall <span class="keyword">be</span> <span class="literal">this</span> <span class="type">CallExpression</span>.</span><br><span class="line"><span class="type">Let</span> tailCall <span class="keyword">be</span> <span class="type">IsInTailPosition</span>(thisCall).</span><br><span class="line"><span class="type">Return</span> ? <span class="type">EvaluateDirectCall</span>(func, thisValue, <span class="type">Arguments</span>, tailCall)</span><br></pre></td></tr></table></figure></p>
+<h5 id="b-方式"><a href="#b-方式" class="headerlink" title="b()方式"></a>b()方式</h5><ul>
+<li>语法规则为：MemberExpression Arguments，其中b为MemberExpression</li>
+<li>MemberExpression中包含PrimaryExpression，PrimaryExpression包含IdentifierReference，所以最终是执行IdentifierReference，在12.1中有定义</li>
+<li>最终是ResolveBinding -&gt; GetIdentifierReference，最终返回一个引用类型，baseValue是环境记录项</li>
+<li>所以thisValue be refEnv.WithBaseObject()</li>
+<li>ResolveBinding -&gt; GetIdentifierReference这个过程最终会确定refEnv为具有b的绑定的词法环境，如果是全局词法环境的话，WithBaseObject()的结果为undefined</li>
+</ul>
+<h5 id="a-b-方式"><a href="#a-b-方式" class="headerlink" title="a.b()方式"></a>a.b()方式</h5><ul>
+<li>语法规则为：MemberExpression Arguments，其中a.b为MemberExpression</li>
+<li>MemberExpression中包含MemberExpression.IdentifierName是Property Accessors，在12.3.2.1中定义其执行过程</li>
+<li>执行结果ref是返回一个Reference类型，baseValue为a,是一个对象，所以IsPropertyReference(ref) 为 true，然后thisValue 为 GetThisValue(ref)</li>
+<li>GetThisValue返回的是ref的base，就是a对象，所以this就是a</li>
+</ul>
+<h5 id="其他方式"><a href="#其他方式" class="headerlink" title="其他方式"></a>其他方式</h5><p>还有很多函数调用的方式，但是分析方法都是一样的，先确定调用的表达式类型，然后去看返回的ref值是什么，从而确定this值，可以参考</p>
+<ul>
+<li><a href="http://www.baizhiedu.com/1587.html" target="_blank" rel="noopener">参考1</a></li>
+<li><a href="http://www.smartcitychina.cn/QianYanJiShu/2016-09/7824.html" target="_blank" rel="noopener">参考2</a></li>
+</ul>
+<h4 id="call-apply"><a href="#call-apply" class="headerlink" title="call\apply"></a>call\apply</h4><p>在19.2.3中定义了Function.prototype的属性，其中就定义了call和apply是如何执行的。如Function.prototype.apply ( thisArg, argArray ):<br><figure class="highlight mercury"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">If IsCallable(<span class="keyword">func</span>) <span class="keyword">is</span> <span class="built_in">false</span>, throw a TypeError exception.</span><br><span class="line">If argArray <span class="keyword">is</span> null or undefined, <span class="built_in">then</span></span><br><span class="line">    Perform PrepareForTailCall().</span><br><span class="line">    Return ? Call(<span class="keyword">func</span>, thisArg).</span><br><span class="line">Let argList be ? CreateListFromArrayLike(argArray).</span><br><span class="line">Perform PrepareForTailCall().</span><br><span class="line">Return ? Call(<span class="keyword">func</span>, thisArg, argList).</span><br></pre></td></tr></table></figure></p>
+<p>可见最终代码的执行其实还是回到F.[[Call]]，只是this值是有明确指定的thisArg参数。</p>
+<h4 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h4><p>19.2.3.2中定义了bind函数的执行过程<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Let Target <span class="keyword">be</span> the this value.</span><br><span class="line">If IsCallable(Target) <span class="keyword">is</span> false, <span class="keyword">throw</span> <span class="keyword">a</span> TypeError exception.</span><br><span class="line">Let <span class="keyword">args</span> <span class="keyword">be</span> <span class="keyword">a</span> <span class="keyword">new</span> (possibly <span class="built_in">empty</span>) List consisting of <span class="keyword">all</span> of the <span class="keyword">argument</span> <span class="built_in">values</span> provided after thisArg in order.</span><br><span class="line">Let F <span class="keyword">be</span> ? BoundFunctionCreate(Target, thisArg, <span class="keyword">args</span>).</span><br><span class="line">Let targetHasLength <span class="keyword">be</span> ? HasOwnProperty(Target, <span class="string">"length"</span>).</span><br><span class="line">If targetHasLength <span class="keyword">is</span> true, then</span><br><span class="line">    Let targetLen <span class="keyword">be</span> ? Get(Target, <span class="string">"length"</span>).</span><br><span class="line">    If Type(targetLen) <span class="keyword">is</span> not Number, <span class="keyword">let</span> L <span class="keyword">be</span> <span class="number">0</span>.</span><br><span class="line">    Else,</span><br><span class="line">    Let targetLen <span class="keyword">be</span> ToInteger(targetLen).</span><br><span class="line">    Let L <span class="keyword">be</span> the larger of <span class="number">0</span> <span class="built_in">and</span> the result of targetLen minus the <span class="keyword">number</span> of elements of <span class="keyword">args</span>.</span><br><span class="line">Else <span class="keyword">let</span> L <span class="keyword">be</span> <span class="number">0</span>.</span><br><span class="line">Perform ! DefinePropertyOrThrow(F, <span class="string">"length"</span>, PropertyDescriptor &#123;[[Value]]: L, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: true&#125;).</span><br><span class="line">Let targetName <span class="keyword">be</span> ? Get(Target, <span class="string">"name"</span>).</span><br><span class="line">If Type(targetName) <span class="keyword">is</span> not String, <span class="keyword">let</span> targetName <span class="keyword">be</span> the <span class="built_in">empty</span> <span class="built_in">string</span>.</span><br><span class="line">Perform SetFunctionName(F, targetName, <span class="string">"bound"</span>).</span><br><span class="line">Return F.</span><br></pre></td></tr></table></figure></p>
+<p>也就是说bind的返回结果是一个BoundFunction，这是一个Exotic Objects。</p>
+<h5 id="BoundFunctionCreate-targetFunction-boundThis-boundArgs"><a href="#BoundFunctionCreate-targetFunction-boundThis-boundArgs" class="headerlink" title="BoundFunctionCreate (targetFunction, boundThis, boundArgs)"></a>BoundFunctionCreate (targetFunction, boundThis, boundArgs)</h5><p>在9.4.1.3中有定义BoundFunctionCreate的执行过程。会把boundThis值设为[[BoundThis]]这个内部属性。<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Assert: Type(targetFunction) <span class="keyword">is</span> <span class="built_in">Object</span>.</span><br><span class="line"><span class="keyword">Let</span> proto be ? targetFunction.[[GetPrototypeOf]]().</span><br><span class="line"><span class="keyword">Let</span> obj be a newly created <span class="built_in">object</span>.</span><br><span class="line"><span class="keyword">Set</span> obj<span class="comment">'s essential internal methods to the default ordinary object definitions specified in 9.1.</span></span><br><span class="line"><span class="keyword">Set</span> the [[<span class="keyword">Call</span>]] internal method <span class="keyword">of</span> obj <span class="keyword">as</span> described <span class="keyword">in</span> <span class="number">9.4</span><span class="number">.1</span><span class="number">.1</span>.</span><br><span class="line"><span class="keyword">If</span> targetFunction has a [[Construct]] internal method, <span class="keyword">then</span></span><br><span class="line"><span class="keyword">Set</span> the [[Construct]] internal method <span class="keyword">of</span> obj <span class="keyword">as</span> described <span class="keyword">in</span> <span class="number">9.4</span><span class="number">.1</span><span class="number">.2</span>.</span><br><span class="line"><span class="keyword">Set</span> the [[Prototype]] internal slot <span class="keyword">of</span> obj <span class="keyword">to</span> proto.</span><br><span class="line"><span class="keyword">Set</span> the [[Extensible]] internal slot <span class="keyword">of</span> obj <span class="keyword">to</span> <span class="literal">true</span>.</span><br><span class="line"><span class="keyword">Set</span> the [[BoundTargetFunction]] internal slot <span class="keyword">of</span> obj <span class="keyword">to</span> targetFunction.</span><br><span class="line"><span class="keyword">Set</span> the [[BoundThis]] internal slot <span class="keyword">of</span> obj <span class="keyword">to</span> the value <span class="keyword">of</span> boundThis.</span><br><span class="line"><span class="keyword">Set</span> the [[BoundArguments]] internal slot <span class="keyword">of</span> obj <span class="keyword">to</span> boundArgs.</span><br><span class="line"><span class="keyword">Return</span> obj.</span><br></pre></td></tr></table></figure></p>
+<p>之前已经说明，任何函数执行都是执行自身的[[Call]]方法，而BoundFunction重定义了其[[Call]]属性，其执行过程如下：<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Let</span> target be the value <span class="keyword">of</span> F<span class="comment">'s [[BoundTargetFunction]] internal slot.</span></span><br><span class="line"><span class="keyword">Let</span> boundThis be the value <span class="keyword">of</span> F<span class="comment">'s [[BoundThis]] internal slot.</span></span><br><span class="line"><span class="keyword">Let</span> boundArgs be the value <span class="keyword">of</span> F<span class="comment">'s [[BoundArguments]] internal slot.</span></span><br><span class="line"><span class="keyword">Let</span> args be a <span class="keyword">new</span> list containing the same values <span class="keyword">as</span> the list boundArgs <span class="keyword">in</span> the same <span class="keyword">order</span> followed <span class="keyword">by</span> the same values <span class="keyword">as</span> the list argumentsList <span class="keyword">in</span> the same <span class="keyword">order</span>.</span><br><span class="line"><span class="keyword">Return</span> ? <span class="keyword">Call</span>(target, boundThis, args).</span><br></pre></td></tr></table></figure></p>
+<p>也就是说会把BoundFunction的[[BoundThis]]值作为this值传入Call(target, boundThis, args)，而Call其实就是执行F.<a href="V, argumentsList">[Call]</a>.最终执行的函数代码还是之前被包裹的那个函数，从这个过程就会发现，一个函数bind得到的函数，再bind传入的this值不会传到最终执行的过程，举例说明：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.info);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> b = a.bind(&#123;<span class="attr">info</span>: <span class="number">1</span>&#125;);</span><br><span class="line"><span class="keyword">var</span> c = b.bind(&#123;<span class="attr">info</span>: <span class="number">2</span>&#125;);</span><br><span class="line">b();</span><br><span class="line">c();</span><br></pre></td></tr></table></figure></p>
+<p>最终结果是输出两个1。</p>
+<ul>
+<li>b就是一个BoundFunction，所以b() -&gt; b.[[Call]] -&gt; Call(a, {info: 1}, args) -&gt; a.[[Call]] ({info: 1});</li>
+<li>c() -&gt; c.[[Call]] -&gt; Call(b, {info: 2}) -&gt; b.[[Call]] -&gt; Call(a, {info: 1}, args) -&gt; a.[[Call]] ({info: 1});<br>所以最终c()输出的还是1，因为BoundFunction的[[Call]]方法只会取其自身绑定的[[BoundThis]]作为this值。</li>
+</ul>
+<h4 id="构造函数调用"><a href="#构造函数调用" class="headerlink" title="构造函数调用"></a>构造函数调用</h4><p>所谓的构造函数调用，其实就是 new 表达式的执行过程，<a href="http://www.ecma-international.org/ecma-262/7.0/index.html#sec-new-operator" target="_blank" rel="noopener">12.3.3</a>定义了new表达式的执行过程。</p>
+<ul>
+<li>先获取函数的[[ConstructorKind]]属性，如果是base则用(fn.prototype||Object.prototype)为原型去创建对象o。</li>
+<li>如果[[ConstructorKind]]是base，则把o对象绑定为当前执行上下文的this。</li>
+<li>执行函数体，获取返回值result</li>
+<li>如果result的类型是return<ul>
+<li>如果其值的类型是Object，则返回result（任何函数，只要返回Object，就直接返回）</li>
+<li>如果[[ConstructorKind]]是base，则返回对象o，（如果是普通函数，如果返回值不是Object，则返回创建的o）</li>
+<li>如果返回值不是undefined，抛出TypeError异常（是返回非object和undefined的值）</li>
+</ul>
+</li>
+<li>返回执行上下文中的this值（函数体中没有return语句）</li>
+</ul>
+<p><em>9.2 中规定[[ConstructorKind]]只有两种值，base和derived，derived就是指声明了继承的使用class语法得到的函数，剩下的就是base</em></p>
+<p>从这个执行过程可以得到以下信息：</p>
+<ul>
+<li>es6+增加了class继承的语法糖，所以在new的过程中要判断继承和非继承两种情况。</li>
+<li>声明了继承的class，不会去绑定this。</li>
+<li>非继承的情况下，以fn.prototype为原型创建新对象o，把this值绑定为对象o。</li>
+</ul>
+<h5 id="子类构造函数调用super"><a href="#子类构造函数调用super" class="headerlink" title="子类构造函数调用super"></a>子类构造函数调用super</h5><p>super在规范也是关键字，super()构成superCall表达式，12.3.5中定义了其执行过程：<br><figure class="highlight mercury"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Let newTarget be GetNewTarget().</span><br><span class="line">If newTarget <span class="keyword">is</span> undefined, throw a ReferenceError exception.</span><br><span class="line">Let <span class="keyword">func</span> be ? GetSuperConstructor().</span><br><span class="line">Let argList be ArgumentListEvaluation of Arguments.</span><br><span class="line">ReturnIfAbrupt(argList).</span><br><span class="line">Let result be ? Construct(<span class="keyword">func</span>, argList, newTarget).</span><br><span class="line">Let thisER be GetThisEnvironment( ).</span><br><span class="line">Return ? thisER.BindThisValue(result).</span><br></pre></td></tr></table></figure></p>
+<p>也就是，先获取父类的构造函数func，result为Construct(func, argList, newTarget)的结果，然后把当前词法环境绑定this为result。</p>
+<h2 id="代码实战"><a href="#代码实战" class="headerlink" title="代码实战"></a>代码实战</h2><ul>
+<li><p>第一题</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;</span><br><span class="line">    b: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.c);</span><br><span class="line">    &#125;,</span><br><span class="line">    c: <span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line">a.b();</span><br><span class="line"><span class="keyword">new</span> a.b();</span><br></pre></td></tr></table></figure>
+<p>  第一个输出是3，属于普通函数调用，好理解，第二个是undefined。因为new表达式的执行过程中，this是会被绑定为新创建的那个对象。</p>
+</li>
+<li><p>第二题</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> c = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">var</span> b = &#123;</span><br><span class="line">    d: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.c);</span><br><span class="line">    &#125;,</span><br><span class="line">    c: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">b.d();</span><br><span class="line">b.d.call(&#123;<span class="attr">c</span>:<span class="number">4</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p>  两个输出都是3，因为箭头函数执行的时候，不会绑定this，所以b.d()执行的时候不会把b绑定为this，所以this执行的时候会往上查找，最终查找到全局环境。<br>  同样的，执行call，因为是箭头函数，同样的不会进行绑定。</p>
+</li>
+<li><p>第三题</p>
+  <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;<span class="keyword">this</span>: <span class="number">1</span>, b: <span class="number">2</span>&#125;;</span><br><span class="line"><span class="keyword">with</span>(a) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(b);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  这个会先输出2，然后输出window。因为with语句会创建一个新的词法环境，而其词法环境为对象词法环境，对象词法环境是没有this值的，所以在执行this表达式的时候，找打的词法环境是外层词法环境，所以如果上述代码在全局环境下的话，结果是window</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/blog/tags/ECMAScript规范/" rel="tag"># ECMAScript规范</a>
+          
+            <a href="/blog/tags/this/" rel="tag"># this</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/02/16/2017-02-16-你所不知道的JavaScript中卷（1）/" rel="next" title="你所不知道的JavaScript中卷（1）">
+                <i class="fa fa-chevron-left"></i> 你所不知道的JavaScript中卷（1）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/07/16/2017-07-16-ECMAScript2016规范理解（2）-执行上下文和词法作用域/" rel="prev" title="ECMAScript2016规范理解（2）-执行上下文和词法作用域">
+                ECMAScript2016规范理解（2）-执行上下文和词法作用域 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/blog/images/default_avatar.jpg" alt="李冬琳">
+            
+              <p class="site-author-name" itemprop="name">李冬琳</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#this-是什么？"><span class="nav-number">1.</span> <span class="nav-text">this 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#this表达式的执行过程"><span class="nav-number">2.</span> <span class="nav-text">this表达式的执行过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#this的使用场景"><span class="nav-number">3.</span> <span class="nav-text">this的使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全局环境"><span class="nav-number">3.1.</span> <span class="nav-text">全局环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数调用"><span class="nav-number">3.2.</span> <span class="nav-text">函数调用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#普通函数调用"><span class="nav-number">3.2.1.</span> <span class="nav-text">普通函数调用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#函数执行前如何确定this"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">函数执行前如何确定this</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#b-方式"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">b()方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#a-b-方式"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">a.b()方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其他方式"><span class="nav-number">3.2.1.4.</span> <span class="nav-text">其他方式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#call-apply"><span class="nav-number">3.2.2.</span> <span class="nav-text">call\apply</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bind"><span class="nav-number">3.2.3.</span> <span class="nav-text">bind</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#BoundFunctionCreate-targetFunction-boundThis-boundArgs"><span class="nav-number">3.2.3.1.</span> <span class="nav-text">BoundFunctionCreate (targetFunction, boundThis, boundArgs)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构造函数调用"><span class="nav-number">3.2.4.</span> <span class="nav-text">构造函数调用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#子类构造函数调用super"><span class="nav-number">3.2.4.1.</span> <span class="nav-text">子类构造函数调用super</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实战"><span class="nav-number">4.</span> <span class="nav-text">代码实战</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李冬琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/blog/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
